@@ -2,16 +2,17 @@ class Ship {
     constructor (length) {
         this.length = length;
         this.hitPoints = 0;
-        this.sank = false;
+        this.sunk = false;
     }
 
     hit() {
         this.hitPoints += 1;
+        this.isSunk();
     }
 
-    checkSank () {
+    isSunk () {
         if (this.length === this.hitPoints) {
-            this.sank = true;
+            this.sunk = true;
         }
     }
 

@@ -6,7 +6,7 @@ test ('Can create ships', () => {
   expect(newShip).toEqual({
       length: 4,
       hitPoints: 0,
-      sank: false,
+      sunk: false,
   })
 })
 
@@ -18,4 +18,13 @@ test ('Ship gets hits', () => {
 
   newShip.hit();
   expect(newShip.hitPoints).toBe(2);
+})
+
+test ('Ship has sunk', () => {
+  const newShip = new Ship(2);
+
+  newShip.hit();
+  newShip.hit();
+
+  expect(newShip.sunk).toBe(true);
 })
