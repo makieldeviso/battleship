@@ -16,6 +16,13 @@ class Ship {
         }
     }
 
+    setPlace (board, coordinates) {
+        coordinates.forEach(cell => {
+            const cellName = `${cell[0]},${cell[1]}`;
+            board['board'][cellName].occupied = true;
+        })
+    }
+
 }
 
 export {Ship}
