@@ -61,3 +61,27 @@ test ('Ships can be placed in the board', () => {
   expect(newBoard.board['B,6'].occupied).toBe(true);
   expect(newBoard.board['B,7'].occupied).toBe(true);
 })
+
+test('Ship length corresponds to coordinates', () => {
+  const newBoard = new GameBoard();
+  const newCarrier = new Ship(4);
+
+  expect(() => {
+    newCarrier.setPlace(newBoard,[['B', 2],['B', 3], ['B', 4]])
+  }).toThrow();
+
+})
+
+test('Ship must be within the board when placed', () => {
+  const newBoard = new GameBoard();
+  const newCarrier = new Ship(2);
+
+  expect(() => {
+    newCarrier.setPlace(newBoard,[['B', 10],['B', 11]])
+  }).toThrow('Out of bounds');
+
+  expect(() => {
+    newCarrier.setPlace(newBoard,[['B', 10],[]])
+  }).toThrow('Out of bounds');
+
+})
