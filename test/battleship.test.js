@@ -1,4 +1,4 @@
-import { Ship } from "../src/apps/createShip";
+import Ship from "../src/apps/createShip";
 import GameBoard from "../src/apps/gameBoard";
 
 test ('Can create ships', () => {
@@ -104,4 +104,9 @@ test('Ships must not collide in placement', () => {
   expect(() => {
     newShip2.setPlace(newBoard,[['A', 9],['B', 9], ['C', 9]])
   }).toThrow('Ships overlap');
+
+  expect(() => {
+    newShip2.setPlace(newBoard,[['B', 8],['B', 9], ['B', 10]])
+  }).toThrow('Ships overlap');
+
 })

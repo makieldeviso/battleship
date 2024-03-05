@@ -21,14 +21,18 @@ class Ship {
         // Coordinates parameter is an array of coordinates in an array, e.g. [['A',1],['B',1]]
         // Coordinate array include at [0] index a string from A-J and at [1] index number from 1-10
 
-        // Check if ship length corresponds to coordinates argument
-        if (this.length !== coordinates.length) throw new Error('Invalid placement');
+        const gameBoard = board.board; // Note: actual board is property of the board object
+
+        // Check if ship length corresponds to coordinates argument 
+        // Checks if coordinates given is valid/ truthy
+        const isInvalidLength = this.length !== coordinates.length;
+        const isInvalidCoordinate = coordinates.some(cell => !cell[0] || !cell[1]);
+
+        if (isInvalidLength || isInvalidCoordinate) throw new Error('Invalid placement');
 
         // Check if coordinates is within the board
         // Note: Ascii for A -> 65, J -> 74
         const isOutOfBounds = coordinates.some(cell => {
-            if (!cell[0] || !cell[1] ) return true
-
             let result = false;
 
             const isOutOfColumns = cell[0].charCodeAt(0) < 65 || cell[0].charCodeAt(0) > 74;
@@ -43,12 +47,28 @@ class Ship {
 
         if (isOutOfBounds) throw new Error('Out of bounds');
 
+
+        // Check if ship placement overlaps with another ship
+        const isOverlaps = coordinates.some(cell => {
+            let result = false;
+            const cellName = `${cell[0]},${cell[1]}`;
+            
+            if (gameBoard[cellName].occupied) {
+                result = true;
+            }
+
+            return result;
+        })
+
+        if (isOverlaps) throw new Error('Ships overlap')
+        
+        // Places the ship in the board execution
         coordinates.forEach(cell => {
             const cellName = `${cell[0]},${cell[1]}`;
-            board['board'][cellName].occupied = true;
+            gameBoard[cellName].occupied = true;
         })
     }
 
 }
 
-export {Ship}
+export default Ship
