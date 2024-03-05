@@ -51,9 +51,9 @@ test ('Board has cells with coordinates', () => {
 
 test ('Ships can be placed in the board', () => {
   const newBoard = new GameBoard();
-  const newCarrier = new Ship(5);
+  const newShip = new Ship(5);
 
-  newCarrier.setPlace(newBoard,[['B', 3],['B', 4], ['B', 5], ['B', 6], ['B', 7]]);
+  newShip.setPlace(newBoard,[['B', 3],['B', 4], ['B', 5], ['B', 6], ['B', 7]]);
 
   expect(newBoard.board['B,3'].occupied).toBe(true);
   expect(newBoard.board['B,4'].occupied).toBe(true);
@@ -64,24 +64,44 @@ test ('Ships can be placed in the board', () => {
 
 test('Ship length corresponds to coordinates', () => {
   const newBoard = new GameBoard();
-  const newCarrier = new Ship(4);
+  const newShip = new Ship(4);
 
   expect(() => {
-    newCarrier.setPlace(newBoard,[['B', 2],['B', 3], ['B', 4]])
+    newShip.setPlace(newBoard,[['B', 2],['B', 3], ['B', 4]])
   }).toThrow();
 
 })
 
 test('Ship must be within the board when placed', () => {
   const newBoard = new GameBoard();
-  const newCarrier = new Ship(2);
+  const newShip = new Ship(2);
 
   expect(() => {
-    newCarrier.setPlace(newBoard,[['B', 10],['B', 11]])
+    newShip.setPlace(newBoard,[['B', 10],['B', 11]])
   }).toThrow('Out of bounds');
 
   expect(() => {
-    newCarrier.setPlace(newBoard,[['B', 10],[]])
+    newShip.setPlace(newBoard,[['J', 1],['K', 1]])
   }).toThrow('Out of bounds');
+})
 
+test('Ship placement coordinate must be valid', () => {
+  const newBoard = new GameBoard();
+  const newShip = new Ship(2);
+
+  expect(() => {
+    newShip.setPlace(newBoard,[['B', 10],[]])
+  }).toThrow('Invalid placement');
+})
+
+test('Ships must not collide in placement', () => {
+  const newBoard = new GameBoard();
+  const newShip = new Ship(2);
+  const newShip2 = new Ship(3);
+
+  newShip.setPlace(newBoard,[['B', 9],['B', 10]]);
+
+  expect(() => {
+    newShip2.setPlace(newBoard,[['A', 9],['B', 9], ['C', 9]])
+  }).toThrow('Ships overlap');
 })
