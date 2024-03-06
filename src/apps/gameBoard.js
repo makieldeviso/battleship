@@ -28,6 +28,23 @@ class GameBoard {
     constructor () {
         this.board = createBoard();
     } 
+
+    receiveAttack(coordinates) {
+        const gameBoard = this.board;
+        const cellName = `${coordinates[0]},${coordinates[1]}`;
+
+        let result = 'missed';
+
+        if (gameBoard[cellName].occupied) {
+            result = 'hit';
+
+            // Add hits to the ship that occupies given coordinate
+            const shipOccupant = gameBoard[cellName].occupied.ship;
+            shipOccupant.hitPoints += 1;
+        }
+
+        return result;
+    }
 }
 
 export default GameBoard

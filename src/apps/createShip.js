@@ -83,11 +83,13 @@ class Ship {
         // Places the ship in the board execution
         coordinates.forEach(cell => {
             const cellName = `${cell[0]},${cell[1]}`;
-            gameBoard[cellName].occupied = true;
+            gameBoard[cellName].occupied = {status:true, ship:this};
+            
         });
 
         // Logs the ship's placement as a property
-        this.placement = coordinates
+        this.placement = coordinates;
+    
     }
 
 }

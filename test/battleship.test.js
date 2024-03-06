@@ -55,11 +55,11 @@ test ('Ships can be placed in the board', () => {
 
   newShip.setPlace(newBoard,[['B', 3],['B', 4], ['B', 5], ['B', 6], ['B', 7]]);
 
-  expect(newBoard.board['B,3'].occupied).toBe(true);
-  expect(newBoard.board['B,4'].occupied).toBe(true);
-  expect(newBoard.board['B,5'].occupied).toBe(true);
-  expect(newBoard.board['B,6'].occupied).toBe(true);
-  expect(newBoard.board['B,7'].occupied).toBe(true);
+  expect(newBoard.board['B,3'].occupied.status).toBe(true);
+  expect(newBoard.board['B,4'].occupied.status).toBe(true);
+  expect(newBoard.board['B,5'].occupied.status).toBe(true);
+  expect(newBoard.board['B,6'].occupied.status).toBe(true);
+  expect(newBoard.board['B,7'].occupied.status).toBe(true);
 })
 
 test('Ship length corresponds to coordinates', () => {
@@ -124,9 +124,9 @@ test('Ships must be placed adjacently', () => {
   newShip.setPlace(newBoard,[['E', 5],['E', 6], ['E', 7]]);
   expect(newBoard.board).toEqual(
     expect.objectContaining({
-      'E,5': {column: 'E', row: 5, occupied: true},
-      'E,6': {column: 'E', row: 6, occupied: true},
-      'E,7': {column: 'E', row: 7, occupied: true}
+      'E,5': {column: 'E', row: 5, occupied: {status:true, ship:newShip}},
+      'E,6': {column: 'E', row: 6, occupied: {status:true, ship:newShip}},
+      'E,7': {column: 'E', row: 7, occupied: {status:true, ship:newShip}}
     })
   )
 })
@@ -164,15 +164,36 @@ test ('Logs ship placement on the board in the ship object', () => {
 
   expect(newBoard.board).toEqual(
     expect.objectContaining({
-      'B,6': {column: 'B', row: 6, occupied: true},
-      'C,6': {column: 'C', row: 6, occupied: true},
-      'D,6': {column: 'D', row: 6, occupied: true},
-      'E,6': {column: 'E', row: 6, occupied: true},
-      'F,6': {column: 'F', row: 6, occupied: true},
-      'B,2': {column: 'B', row: 2, occupied: true},
-      'B,3': {column: 'B', row: 3, occupied: true},
-      'B,4': {column: 'B', row: 4, occupied: true},
-      'B,5': {column: 'B', row: 5, occupied: true},
+      'B,6': {column: 'B', row: 6, occupied: {status:true, ship:newShip}},
+      'C,6': {column: 'C', row: 6, occupied: {status:true, ship:newShip}},
+      'D,6': {column: 'D', row: 6, occupied: {status:true, ship:newShip}},
+      'E,6': {column: 'E', row: 6, occupied: {status:true, ship:newShip}},
+      'F,6': {column: 'F', row: 6, occupied: {status:true, ship:newShip}},
+      'B,2': {column: 'B', row: 2, occupied: {status:true, ship:newShip2}},
+      'B,3': {column: 'B', row: 3, occupied: {status:true, ship:newShip2}},
+      'B,4': {column: 'B', row: 4, occupied: {status:true, ship:newShip2}},
+      'B,5': {column: 'B', row: 5, occupied: {status:true, ship:newShip2}},
     })
   )
+})
+
+test ('Gameboard receives attack coordinate from opponent', () => {
+  const newBoard = new GameBoard();
+  const carrier = new Ship(5);
+  const battleship = new Ship(4);
+  const cruiser = new Ship(3);
+  const submarine = new Ship(3);
+  const patrol = new Ship(2);
+
+  carrier.setPlace(newBoard,[['B', 6],['C', 6], ['D', 6], ['E', 6], ['F', 6]]);
+  battleship.setPlace(newBoard,[['B', 2],['B', 3], ['B', 4], ['B', 5]]);
+  cruiser.setPlace(newBoard,[['D', 2],['E', 2], ['F', 2]]);
+  submarine.setPlace(newBoard,[['I', 3],['I', 4], ['I', 5]]);
+  patrol.setPlace(newBoard,[['E', 9],['F', 9]]);
+
+  expect(newBoard.receiveAttack(['H',7])).toMatch('missed');
+
+  expect(newBoard.receiveAttack(['I',5])).toMatch('hit');
+  expect(submarine.hitPoints).toBe(1);
+
 })
