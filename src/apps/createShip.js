@@ -25,15 +25,11 @@ class Ship {
 
         const coorSet = new Set();
         coordinates.forEach(cell => coorSet.add(`${cell[0]}${cell[1]}`));
-        console.log(coorSet)
 
         // Check if ship length corresponds to coordinates argument 
         // Checks if coordinates given is valid/ truthy
         const isInvalidLength = this.length !== coorSet.size;
         const isInvalidCoordinate = coordinates.some(cell => !cell[0] || !cell[1]);
-
-        
-
 
         if (isInvalidLength || isInvalidCoordinate) throw new Error('Invalid placement');
 
@@ -71,7 +67,7 @@ class Ship {
         if (isOutOfBounds) throw new Error('Out of bounds');
 
         // Check if ship placement overlaps with another ship
-        const isOverlaps = coordinates.some(cell => {
+        const isOverlapping = coordinates.some(cell => {
             let result = false;
             const cellName = `${cell[0]},${cell[1]}`;
             
@@ -82,13 +78,16 @@ class Ship {
             return result;
         })
 
-        if (isOverlaps) throw new Error('Ships overlap')
+        if (isOverlapping) throw new Error('Ships overlap');
         
         // Places the ship in the board execution
         coordinates.forEach(cell => {
             const cellName = `${cell[0]},${cell[1]}`;
             gameBoard[cellName].occupied = true;
-        })
+        });
+
+        // Logs the ship's placement as a property
+        this.placement = coordinates
     }
 
 }

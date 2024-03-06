@@ -27,8 +27,7 @@ const createBoard = () => {
 class GameBoard {
     constructor () {
         this.board = createBoard();
-    }
-    
+    } 
 }
 
 export default GameBoard
