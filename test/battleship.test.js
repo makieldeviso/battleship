@@ -216,10 +216,13 @@ describe ('Attack tests', () => {
 
   })
 
+  test ('Game board knows about placed ships', () => {
+    expect(newBoard.ships).toEqual([carrier, battleship, cruiser, submarine, patrol]);
+  })
 
 })
 
-  
+
   
   
 

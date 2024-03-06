@@ -89,7 +89,9 @@ class Ship {
 
         // Logs the ship's placement as a property
         this.placement = coordinates;
-    
+
+        // Save the ships in the game board as an array in ships property
+        board.ships.push(this);
     }
 
 }

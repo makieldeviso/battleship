@@ -27,9 +27,10 @@ const createBoard = () => {
 class GameBoard {
     constructor () {
         this.board = createBoard();
+        this.ships = [];
     } 
 
-    receiveAttack(coordinates) {
+    receiveAttack (coordinates) {
         const gameBoard = this.board;
         const cellName = `${coordinates[0]},${coordinates[1]}`;
         const cell = gameBoard[cellName];
@@ -50,6 +51,7 @@ class GameBoard {
 
         return result;
     }
+
 }
 
 export default GameBoard
