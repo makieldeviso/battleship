@@ -28,6 +28,7 @@ class GameBoard {
     constructor () {
         this.board = createBoard();
         this.ships = [];
+        this.allShipsSunk = false;
     } 
 
     receiveAttack (coordinates) {
@@ -48,8 +49,20 @@ class GameBoard {
 
         // Logs this cell if it has been attacked
         cell.attacked = result;
-
+        this.checkShipsSunk();
         return result;
+    }
+
+    checkShipsSunk () {
+        const currentShips = this.ships;
+        const stillAfloat = currentShips.some(ship => !ship.sunk);
+        
+        if (stillAfloat) {
+            this.allShipsSunk = false;
+        } else {
+            this.allShipsSunk = true;
+        }
+        
     }
 
 }

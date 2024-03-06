@@ -220,6 +220,35 @@ describe ('Attack tests', () => {
     expect(newBoard.ships).toEqual([carrier, battleship, cruiser, submarine, patrol]);
   })
 
+  test ('Game board knows if all of its ships has sunk', () => {
+    const newBoard = new GameBoard();
+    const submarine = new Ship(3);
+    const patrol = new Ship(2);
+
+    submarine.setPlace(newBoard, [['C',4], ['D',4],['E',4]]);
+    patrol.setPlace(newBoard, [['E',6], ['F',6]]);
+
+    newBoard.receiveAttack(['C',4]),
+    newBoard.receiveAttack(['D',4]),
+    newBoard.receiveAttack(['E',4]),
+    newBoard.receiveAttack(['E',6]),
+    newBoard.receiveAttack(['F',6]),
+
+    // Test the ships array directly
+    expect(newBoard.ships).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({sunk:true}),
+        expect.objectContaining({sunk:true}),
+        ]
+      )
+    )
+
+    // Test allShipsSunk property
+    expect(newBoard.allShipsSunk).toBe(true);
+
+
+
+  })
 })
 
 
