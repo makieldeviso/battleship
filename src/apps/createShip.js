@@ -23,12 +23,35 @@ class Ship {
 
         const gameBoard = board.board; // Note: actual board is property of the board object
 
+        const coorSet = new Set();
+        coordinates.forEach(cell => coorSet.add(`${cell[0]}${cell[1]}`));
+        console.log(coorSet)
+
         // Check if ship length corresponds to coordinates argument 
         // Checks if coordinates given is valid/ truthy
-        const isInvalidLength = this.length !== coordinates.length;
+        const isInvalidLength = this.length !== coorSet.size;
         const isInvalidCoordinate = coordinates.some(cell => !cell[0] || !cell[1]);
 
+        
+
+
         if (isInvalidLength || isInvalidCoordinate) throw new Error('Invalid placement');
+
+        // Check if ship is placed adjacently
+        const isNotAdjacent = coordinates.some(cell => {
+            const colRef = coordinates[0][0]; // Reference column value;
+            const rowRef = coordinates[0][1]; // Reference row value;
+            let result = false;
+
+            if ((cell[0] !== colRef) && (cell[1] !== rowRef)) {
+                // If neither of the current cell coordinate is equal to the 
+                // reference coordinates detect non adjacency
+                result = true;
+            }
+            return result;
+        })
+        
+        if (isNotAdjacent) throw new Error('Ships must be placed adjacently');
 
         // Check if coordinates is within the board
         // Note: Ascii for A -> 65, J -> 74
@@ -46,7 +69,6 @@ class Ship {
         })
 
         if (isOutOfBounds) throw new Error('Out of bounds');
-
 
         // Check if ship placement overlaps with another ship
         const isOverlaps = coordinates.some(cell => {

@@ -110,3 +110,34 @@ test('Ships must not collide in placement', () => {
   }).toThrow('Ships overlap');
 
 })
+
+test('Ships must be placed adjacently', () => {
+  const newBoard = new GameBoard();
+  const newShip = new Ship(3);
+
+  // Ship is not placed
+  expect(() => {
+    newShip.setPlace(newBoard,[['E', 5],['F', 6], ['G', 7]]);
+  }).toThrow('Ships must be placed adjacently');
+
+  // Ship is placed on the board when ship is adjacently placed
+  newShip.setPlace(newBoard,[['E', 5],['E', 6], ['E', 7]]);
+  expect(newBoard.board).toEqual(
+    expect.objectContaining({
+      'E,5': {column: 'E', row: 5, occupied: true},
+      'E,6': {column: 'E', row: 6, occupied: true},
+      'E,7': {column: 'E', row: 7, occupied: true}
+    })
+  )
+})
+
+test ('Ship coordinates must be unique cell according to length', () => {
+  const newBoard = new GameBoard();
+  const newShip = new Ship(3);
+
+  // Ship is not placed
+  expect(() => {
+    newShip.setPlace(newBoard,[['E', 5],['E', 5], ['E', 5]]);
+  }).toThrow('Invalid placement');
+
+})
