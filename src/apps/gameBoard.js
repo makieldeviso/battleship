@@ -32,16 +32,21 @@ class GameBoard {
     receiveAttack(coordinates) {
         const gameBoard = this.board;
         const cellName = `${coordinates[0]},${coordinates[1]}`;
+        const cell = gameBoard[cellName];
 
         let result = 'missed';
 
-        if (gameBoard[cellName].occupied) {
+        if (cell.occupied) {
             result = 'hit';
 
             // Add hits to the ship that occupies given coordinate
-            const shipOccupant = gameBoard[cellName].occupied.ship;
-            shipOccupant.hitPoints += 1;
+            const shipOccupant = cell.occupied.ship;
+            shipOccupant.hitPoints += 1; // Adds hitPoints to ship
+            shipOccupant.isSunk(); // Check current status, then change ship object property if sunk
         }
+
+        // Logs this cell if it has been attacked
+        cell.attacked = result;
 
         return result;
     }

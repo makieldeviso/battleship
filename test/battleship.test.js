@@ -208,6 +208,15 @@ describe ('Attack tests', () => {
     expect(submarine.sunk).toBe(true);
   })
 
+  test ('Log cell if it has been attacked', () => {
+    expect(newBoard.board['H,7'].attacked).toEqual('missed');
+    expect(newBoard.board['I,5'].attacked).toEqual('hit');
+    expect(newBoard.board['I,4'].attacked).toEqual('hit');
+    expect(newBoard.board['I,3'].attacked).toEqual('hit');
+
+  })
+
+
 })
 
   
