@@ -43,9 +43,9 @@ describe('Structure tests', () => {
   
     expect(newBoard.board).toEqual(
       expect.objectContaining({
-        'A,1': {column: 'A', row: 1},
-        'J,10': {column: 'J', row: 10},
-        'B,8': {column: 'B', row: 8},
+        'A,1': expect.objectContaining({column: 'A', row: 1}),
+        'J,10': expect.objectContaining({column: 'J', row: 10}),
+        'B,8': expect.objectContaining({column: 'B', row: 8}),
       })
     )
   })
@@ -128,9 +128,9 @@ describe ('Ship placement tests', () => {
     newShip.setPlace(newBoard,[['E', 5],['E', 6], ['E', 7]]);
     expect(newBoard.board).toEqual(
       expect.objectContaining({
-        'E,5': {column: 'E', row: 5, occupied: {status:true, ship:newShip}},
-        'E,6': {column: 'E', row: 6, occupied: {status:true, ship:newShip}},
-        'E,7': {column: 'E', row: 7, occupied: {status:true, ship:newShip}}
+        'E,5': expect.objectContaining({column: 'E', row: 5, occupied: {status:true, ship:newShip}}),
+        'E,6': expect.objectContaining({column: 'E', row: 6, occupied: {status:true, ship:newShip}}),
+        'E,7': expect.objectContaining({column: 'E', row: 7, occupied: {status:true, ship:newShip}})
       })
     )
   })
@@ -168,15 +168,15 @@ describe ('Ship placement tests', () => {
   
     expect(newBoard.board).toEqual(
       expect.objectContaining({
-        'B,6': {column: 'B', row: 6, occupied: {status:true, ship:newShip}},
-        'C,6': {column: 'C', row: 6, occupied: {status:true, ship:newShip}},
-        'D,6': {column: 'D', row: 6, occupied: {status:true, ship:newShip}},
-        'E,6': {column: 'E', row: 6, occupied: {status:true, ship:newShip}},
-        'F,6': {column: 'F', row: 6, occupied: {status:true, ship:newShip}},
-        'B,2': {column: 'B', row: 2, occupied: {status:true, ship:newShip2}},
-        'B,3': {column: 'B', row: 3, occupied: {status:true, ship:newShip2}},
-        'B,4': {column: 'B', row: 4, occupied: {status:true, ship:newShip2}},
-        'B,5': {column: 'B', row: 5, occupied: {status:true, ship:newShip2}},
+        'B,6': expect.objectContaining({column: 'B', row: 6, occupied: {status:true, ship:newShip}}),
+        'C,6': expect.objectContaining({column: 'C', row: 6, occupied: {status:true, ship:newShip}}),
+        'D,6': expect.objectContaining({column: 'D', row: 6, occupied: {status:true, ship:newShip}}),
+        'E,6': expect.objectContaining({column: 'E', row: 6, occupied: {status:true, ship:newShip}}),
+        'F,6': expect.objectContaining({column: 'F', row: 6, occupied: {status:true, ship:newShip}}),
+        'B,2': expect.objectContaining({column: 'B', row: 2, occupied: {status:true, ship:newShip2}}),
+        'B,3': expect.objectContaining({column: 'B', row: 3, occupied: {status:true, ship:newShip2}}),
+        'B,4': expect.objectContaining({column: 'B', row: 4, occupied: {status:true, ship:newShip2}}),
+        'B,5': expect.objectContaining({column: 'B', row: 5, occupied: {status:true, ship:newShip2}}),
       })
     )
   })
@@ -245,14 +245,19 @@ describe ('Attack tests', () => {
 
     // Test allShipsSunk property
     expect(newBoard.allShipsSunk).toBe(true);
-
-
-
   })
 })
 
+describe('Game algorithms', () => {
 
-  
-  
+  test ('Each cell has property of its adjacent cells', () => {
+    const board = new GameBoard().board;
+    const e4Adjacent = board['E,4'].adjacent;
+    const j10Adjacent = board['J,10'].adjacent;
+    
+    expect(e4Adjacent).toEqual([board['F,4'], board['D,4'], board['E,5'], board['E,3']]);
+    expect(j10Adjacent).toEqual([board['I,10'], board['J,9']]);
+  })
 
+})
 

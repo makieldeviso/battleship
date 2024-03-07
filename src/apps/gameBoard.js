@@ -1,26 +1,60 @@
 const createBoard = () => {
-    const newBoard = {}
-        let columnNameCode = 65; // Ascii for 'A'
-        let rowNumber = 1;
+    const newBoard = {};
+
+    let columnNameCode = 65; // Ascii for 'A'
+    let rowNumber = 1;
+
+    // Note: Ascii for A -> 65, J -> 74
+    // Create cells object for the new board
+    while(columnNameCode <= 74 ) {
+        const columnName = String.fromCharCode(columnNameCode);
+        const cellName = `${columnName},${rowNumber}`;
+
+        newBoard[cellName] = {column: columnName, row: rowNumber};
+        
+        if (rowNumber === 10 && columnNameCode <= 74) columnNameCode += 1;
+
+        if (rowNumber < 10 && columnNameCode <= 74) {
+            rowNumber += 1;
+        } else if (rowNumber >= 10 && columnNameCode <= 74) {
+            rowNumber = 1;
+        }
+    }
+
+    // Make adjacency list for the cells
+    const cellKeys = Object.keys(newBoard);
+    cellKeys.forEach(key => {
+        const cellCol = newBoard[key].column;
+        const cellRow = newBoard[key].row;
+
+        const adjArray = [];
 
         // Note: Ascii for A -> 65, J -> 74
-
-        while(columnNameCode <= 74 ) {
-            const columnName = String.fromCharCode(columnNameCode);
-            const cellName = `${columnName},${rowNumber}`;
-
-            newBoard[cellName] = {column: columnName, row: rowNumber};
-            
-            if (rowNumber === 10 && columnNameCode <= 74) columnNameCode += 1;
-
-            if (rowNumber < 10 && columnNameCode <= 74) {
-                rowNumber += 1;
-            } else if (rowNumber >= 10 && columnNameCode <= 74) {
-                rowNumber = 1;
+        // Pushes Adjacency instances  to adjArray
+        // Note: Cells are validated if it is within the board
+        const columnChange = [cellCol.charCodeAt(0) + 1, cellCol.charCodeAt(0) - 1];
+        const rowChange =  [cellRow + 1, cellRow - 1];
+        
+        columnChange.forEach(colVal => {
+            if (colVal >= 65 && colVal <= 74) {
+                const cellName = `${String.fromCharCode(colVal)},${cellRow}`;
+                adjArray.push(newBoard[cellName]);
             }
-        }
+        });
 
-       return newBoard
+        rowChange.forEach(rowVal => {
+            if (rowVal >= 1 && rowVal <= 10) {
+                const cellName = `${cellCol},${rowVal}`;
+                adjArray.push(newBoard[cellName]);
+            }
+        });
+        
+        // Assign created array of adjacent cells to the cell
+        newBoard[key].adjacent = adjArray;
+    })
+
+
+    return newBoard
 }
 
 
@@ -49,6 +83,8 @@ class GameBoard {
 
         // Logs this cell if it has been attacked
         cell.attacked = result;
+
+        // Check if all ships has sunk
         this.checkShipsSunk();
         return result;
     }
