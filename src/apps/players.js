@@ -1,7 +1,7 @@
 class Player {
-    constructor (board, ships) {
+    constructor (name, board) {
+        this.name = name;
         this.gameBoard = board; // GameBoard
-        this.ships = ships; // Array of ships
     }
 }
 
