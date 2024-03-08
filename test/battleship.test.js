@@ -5,11 +5,15 @@ describe('Structure tests', () => {
   test ('Can create ships', () => {
     const newShip = new Ship(4);
   
-    expect(newShip).toEqual({
-        length: 4,
-        hitPoints: 0,
-        sunk: false,
-    })
+    expect(newShip).toEqual(
+      expect.objectContaining(
+        {
+          length: 4,
+          hitPoints: 0,
+          sunk: false,
+        }
+      )
+    )
   })
   
   test ('Ship gets hits', () => {
@@ -257,6 +261,17 @@ describe('Game algorithms', () => {
     
     expect(e4Adjacent).toEqual([board['F,4'], board['D,4'], board['E,5'], board['E,3']]);
     expect(j10Adjacent).toEqual([board['I,10'], board['J,9']]);
+  });
+
+  test ('Ships can be named', () => {
+    const carrier = new Ship(5, 'Carrier')
+
+    expect(carrier).toEqual(
+      expect.objectContaining({
+        name: 'Carrier',
+        length: 5
+      })
+    )
   })
 
 })

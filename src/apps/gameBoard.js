@@ -53,7 +53,6 @@ const createBoard = () => {
         newBoard[key].adjacent = adjArray;
     })
 
-
     return newBoard
 }
 

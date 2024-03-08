@@ -1,5 +1,6 @@
 class Ship {
-    constructor (length) {
+    constructor (length, name) {
+        this.name = name;
         this.length = length;
         this.hitPoints = 0;
         this.sunk = false;
@@ -93,7 +94,6 @@ class Ship {
         // Save the ships in the game board as an array in ships property
         board.ships.push(this);
     }
-
 }
 
 export default Ship
