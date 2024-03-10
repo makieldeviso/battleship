@@ -1,0 +1,66 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --cell-size: 20px;
+}
+
+div.tally-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    width: 300px;
+    justify-self: center;
+}
+
+div.main-grid {
+    grid-area: main;
+    width: max-content;
+    height: max-content;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+}
+
+div.main-grid div.cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid black;
+}
+
+div.main-grid div.cell.occupied {
+    background-color: aquamarine;
+}
+
+div.column-marker div, div.row-marker div {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    display: flex;
+    justify-content: center;
+}
+
+div.column-marker {
+    grid-area: columns;
+    width: max-content;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+}
+
+div.row-marker {
+    grid-area: rows;
+    width: max-content;
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+}
+
+div.play-grid {
+    width: max-content;
+    height: max-content;
+    display: grid;
+    grid-template-areas: 
+    "rows main"
+    ". columns";
+}

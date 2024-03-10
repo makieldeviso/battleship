@@ -1,13 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Fred Mark Baldeviso">
-    <meta name="description" content="A battleship game that runs on the browser. Implements TDD with jest">
-    <title>Battleship</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Fred Mark Baldeviso">
+  <meta name="description" content="A battleship game that runs on the browser. Implements TDD with jest">
+  <title>Battleship</title>
 </head>
 <body>
-    
+  <header>Battleship</header>
+
+    <main>
+      <div id="game-table">
+
+        <div id="player-board">
+          <div id="player-detail">
+            <h2 id="player-name">Player-1</h2>
+
+            <div id="player-tally" data-ships="5" class="tally-board">
+              <div id="carrier-tally">5</div>
+              <div id="battleship-tally">4</div>
+              <div id="destroyer-tally">3</div>
+              <div id="submarine-tally">3</div>
+              <div id="patrol-tally">2</div>
+            </div>
+          </div>
+
+          <div id="player-grid" class="play-grid">
+            <div class="main-grid"></div>
+          </div>
+            
+        </div>
+
+        <div id="computer-board">
+          <div id="computer-detail">
+            <h2 id="computer-name">Gen. Coco</h2>
+
+            <div id="computer-tally" data-ships="5" class="tally-board">
+              <div id="carrier-tally">5</div>
+              <div id="battleship-tally">4</div>
+              <div id="destroyer-tally">3</div>
+              <div id="submarine-tally">3</div>
+              <div id="patrol-tally">2</div>
+            </div>
+
+          </div>
+
+          <div id="computer-grid" class="play-grid">
+            <div class="main-grid"></div>
+          </div>
+            
+        </div>
+      </div>
+    </main>
+
+    <footer></footer>
+
 </body>
 </html>

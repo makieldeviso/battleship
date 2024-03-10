@@ -303,3 +303,25 @@ describe('Game algorithms', () => {
 
 })
 
+// describe('DOM Scripts', () => {
+//   const newGame = new GamePlay();
+//   newGame.start();
+
+//   const bs1 = newGame.playerSelectShipToPlace(5, 'Carrier');
+//   const bs2 = newGame.playerSelectShipToPlace(4, 'Battleship');
+//   const bs3 = newGame.playerSelectShipToPlace(3, 'Destroyer');
+//   const bs4 = newGame.playerSelectShipToPlace(3, 'Submarine');
+//   const bs5 = newGame.playerSelectShipToPlace(2, 'Patrol Boat');
+
+//   newGame.playerPlaceShip(bs1, [['B', 6],['C', 6], ['D', 6], ['E', 6], ['F', 6]]);
+//   newGame.playerPlaceShip(bs2, [['B', 2],['B', 3], ['B', 4], ['B', 5]]);
+//   newGame.playerPlaceShip(bs3, [['D', 2],['E', 2], ['F', 2]]);
+//   newGame.playerPlaceShip(bs4, [['I', 3],['I', 4], ['I', 5]]);
+//   newGame.playerPlaceShip(bs5, [['E', 9],['F', 9]]);
+
+//   test ('Starting the game creates a game board in the DOM', () => {
+//     expect(document.querySelectorAll('div.cell').length).toBe(100)
+//   })
+
+// })
+

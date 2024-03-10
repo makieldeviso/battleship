@@ -1,3 +1,4 @@
+// Scripts
 import { computerPlaceShips, generateRandomNumber } from "./computerScript";
 import GameBoard from "./gameBoard";
 import Player from "./players";
@@ -23,7 +24,6 @@ class GamePlay {
     // computerPlaceShips(playerBoard);
     this.player.gameBoard = playerBoard;
     this.phase = 'playerPlaceShip';
-
   }
 
   playerSelectShipToPlace (length, shipName) {
