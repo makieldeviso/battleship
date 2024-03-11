@@ -8,7 +8,7 @@ class GamePlay {
   constructor() {
     this.playerShipPlaced = false;
     this.phase = 'start';
-    this.computer = new Player('Gen. Coco');
+    this.computer = new Player('coco');
     this.player = new Player('Player');
     this.maxShips = 5;
   }
@@ -21,7 +21,8 @@ class GamePlay {
 
     // Create board for player
     const playerBoard = new GameBoard();
-    // computerPlaceShips(playerBoard);
+    // Initially place random ship placement for the player at start
+    computerPlaceShips(playerBoard); 
     this.player.gameBoard = playerBoard;
     this.phase = 'playerPlaceShip';
   }

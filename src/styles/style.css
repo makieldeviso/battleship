@@ -5,17 +5,33 @@
 }
 
 :root {
-    --cell-size: 20px;
+    --cell-size: 40px;
+    --common-padding: 8px;
+    --common-margin: 16px;
 }
 
-div.tally-board {
+/* Play board (start)*/
+div.play-board {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    width: 300px;
-    justify-self: center;
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content 1fr;
+    gap: var(--common-margin);
+    width: max-content;
 }
 
+div.play-detail {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 2fr;
+    gap: var(--common-margin);
+    justify-self: start;
+    padding: var(--common-padding);
+    width: 100%;
+}
+
+/* Play board (end)*/
+
+/* Main play board grid (start) */
 div.main-grid {
     grid-area: main;
     width: max-content;
@@ -23,6 +39,8 @@ div.main-grid {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
+
+    justify-self: ;
 }
 
 div.main-grid div.cell {
@@ -40,6 +58,7 @@ div.column-marker div, div.row-marker div {
     height: var(--cell-size);
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 div.column-marker {
@@ -63,4 +82,57 @@ div.play-grid {
     grid-template-areas: 
     "rows main"
     ". columns";
+    padding: var(--common-padding);
 }
+
+div.play-grid div.ship-unit {
+    /* tally board ship units */
+    width: max-content;
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+
+    border: 2px solid red;
+    background-color: rgba(255, 0, 0, 0.3);
+
+    position: absolute;
+    cursor: pointer;
+}
+
+div.play-grid div.ship-unit div.ship-cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+
+}
+
+
+/* Main play board grid (end) */
+
+/* Tally board (start)*/
+div.tally-board {
+    display: flex;
+    width: 100%;
+    max-width: calc(9 * var(--cell-size));
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-left: var(--cell-size);
+}
+
+div.tally-board div {
+    /* tally board ship units */
+    width: max-content;
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+
+    border: 1px solid gray;
+}
+
+div.tally-board div div.ship-cell {
+    width: calc(var(--cell-size) / 2);
+    height: calc(var(--cell-size) / 2);
+    border: 1px solid green;
+}
+
+/* Tally board (start)*/
