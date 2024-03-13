@@ -48,9 +48,16 @@ div.main-grid div.cell {
     border: 1px solid black;
 }
 
-div.main-grid div.cell.hovered {
+div.main-grid div.cell.hover {
+    /* Note: hover is class added from script */
     background-color: rgba(0, 128, 0, 0.3);
     border: 1px solid green;
+}
+
+div.main-grid div.cell.hover.invalid {
+    /* Note: hover is class added from script */
+    background-color: rgba(255, 0, 0, 0.3);
+    border: 1px solid red;
 }
 
 div.main-grid div.cell.occupied {

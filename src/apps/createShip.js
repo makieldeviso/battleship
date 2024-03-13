@@ -100,7 +100,14 @@ class Ship {
     }
 
     removePlace () {
-        console.log('ship removed')
+        const gameBoard = this.board.board;
+
+        this.placement.forEach(coor => {
+            const cellName = `${coor[0]},${coor[1]}`
+            gameBoard[cellName].occupied = null
+        })
+
+        this.placement = [];
     }
 }
 

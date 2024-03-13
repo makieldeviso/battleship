@@ -43,17 +43,22 @@ const createShipTally = function (shipObj, playerName) {
 
 // Event listener function
 const selectShip = function (event) {
-  const shipUnit = this;
-  const currentPlayerShips = memory.current.player.gameBoard.ships;
-  const shipObj = currentPlayerShips.find(ship => ship.name === this.title);
   
-  let currentDomPlacement = shipObj.placement.map(coor => document.querySelector(`div.cell[data-column='${coor[0]}'][data-row='${coor[1]}']`));
-  
-  let hoveredCells = [];
-  // Remove the shipObj from the gameBoard obj
-  shipObj.removePlace();
-  
-  if (event.type === 'mousedown') {
+  if (event.type === 'mousedown' && event.button === 0) {
+    event.preventDefault();
+    const shipUnit = this;
+    const currentPlayerShips = memory.current.player.gameBoard.ships;
+    const shipObj = currentPlayerShips.find(ship => ship.name === this.title);
+    const currentShipPlacement = shipObj.placement;
+
+    let currentDomPlacement = shipObj.placement.map(coor => document.querySelector(`div.cell[data-column='${coor[0]}'][data-row='${coor[1]}']`));
+    let currentPosX = shipUnit.offsetLeft;
+    let currentPosY = shipUnit.offsetTop;
+    let hoveredCells = [];
+
+    // Remove the shipObj from the gameBoard obj
+    shipObj.removePlace();
+
     // Move the ship unit along the cursor
     const firstPosX = shipUnit.offsetLeft - event.clientX;
     const firstPosY = shipUnit.offsetTop - event.clientY;
@@ -63,6 +68,7 @@ const selectShip = function (event) {
       // Ship unit follows the cursor in the DOM while mousedown
       shipUnit.style.left = `${event.clientX + firstPosX}px`;
       shipUnit.style.top = `${event.clientY + firstPosY}px`;
+      currentDomPlacement.forEach(cell => cell.classList.remove('occupied'));
 
       const shipPosX = shipUnit.offsetLeft;
       const shipPosY = shipUnit.offsetTop;
@@ -75,21 +81,28 @@ const selectShip = function (event) {
       let tailNearCell;
       if (orientation === 'vertical') {
         headNearCell = document.elementsFromPoint(shipPosX + shipWidth/2, shipPosY + shipWidth/2)
-        .find(node => node.className === 'cell');
+        .find(node => node.classList.contains('cell'));
 
         tailNearCell = document.elementsFromPoint(shipPosX + shipWidth/2, shipPosY + shipHeight - shipWidth/2)
-        .find(node => node.className === 'cell');
+        .find(node => node.classList.contains('cell'));
 
       } else {
         headNearCell = document.elementsFromPoint(shipPosX + shipHeight/2, shipPosY + shipHeight/2)
-        .find(node => node.className === 'cell');
+        .find(node => node.classList.contains('cell'));
 
         tailNearCell = document.elementsFromPoint(shipPosX + shipWidth - shipHeight/2, shipPosY + shipHeight/2)
-        .find(node => node.className === 'cell');
+        .find(node => node.classList.contains('cell'));
       }
 
       const newDomPlacement =  [headNearCell, tailNearCell];
-      
+
+      // Check if headNearCella and tailNearCell are occupied
+      // Note: Splice newDomPlacement. Don't reassign headNearCell and tailIsOccupied
+      const headIsOccupied = headNearCell ? headNearCell.classList.contains('occupied') : false;
+      const tailIsOccupied = tailNearCell ? tailNearCell.classList.contains('occupied') : false;
+      if (headIsOccupied) newDomPlacement.splice(0, 1,  null);
+      if (tailIsOccupied) newDomPlacement.splice(1, 1,  null);
+
       for (let i = 1; newDomPlacement.length < shipObj.length; i++) {
         let adjCellX;
         let adjCellY;
@@ -106,6 +119,9 @@ const selectShip = function (event) {
           }
 
           adjCell = document.querySelector(`div.cell[data-column='${adjCellX}'][data-row='${adjCellY}']`);
+
+          if (adjCell) adjCell = !adjCell.classList.contains('occupied') ? adjCell : null
+          
           newDomPlacement.splice(newDomPlacement.length-1, 0, adjCell);
 
         } else if (tailNearCell) {
@@ -119,35 +135,72 @@ const selectShip = function (event) {
           }
 
           adjCell = document.querySelector(`div.cell[data-column='${adjCellX}'][data-row='${adjCellY}']`);
-          newDomPlacement.splice(newDomPlacement.length-1, 0, adjCell);
+          if (adjCell) adjCell = !adjCell.classList.contains('occupied') ? adjCell : null
+          newDomPlacement.splice(1, 0, adjCell);
 
         } else {
           newDomPlacement.splice(newDomPlacement.length-1, 0, null);
         }
-
+      }
+      
+     
+      if (hoveredCells[0] !== newDomPlacement[0]) {
+        hoveredCells.forEach(cell => {
+          if (cell) {
+            cell.classList.remove('hover');
+            cell.classList.remove('invalid');
+          }
+        })
       }
 
-      console.log(newDomPlacement)
-      
-  }
+      if (newDomPlacement.includes(null) || newDomPlacement.includes(undefined)) {
+        newDomPlacement.forEach(cell => {
+          if (cell) cell.classList.add('hover');
+          if (cell) cell.classList.add('invalid');
+        })
+      } else {
+        newDomPlacement.forEach(cell => {
+          if (cell) cell.classList.add('hover');
+        })
+      }
 
+      hoveredCells = newDomPlacement;  
+    }
 
     // Helper/ Eventlistener function -> mouseup
     const placeShipUnit = function (event) {
-      // elementsFromPoint gets an array of elements nearest the mouse up release point
-      // Chain .find() to get the grid cell needed
-      const shipPosX = shipUnit.offsetLeft;
-      const shipPosY = shipUnit.offsetTop;
-      const shipWidth = shipUnit.clientWidth;
-      const shipHeight = shipUnit.clientHeight;
-      const midPoint = shipPosX + shipWidth / 2;
+      let newPlacement = currentShipPlacement;
+      
+      if (!hoveredCells.includes(null) && !hoveredCells.includes(undefined) && hoveredCells.length !== 0) {
+        // Create newPlacement array as coordinates for new ship placement 
+        newPlacement = hoveredCells.map(cell => [cell.dataset.column, Number(cell.dataset.row)]);
 
-      let orientation = shipHeight > shipWidth? 'vertical' : 'horizontal';
+        // Place the ship unit to new placement on DOM
+        shipUnit.style.left = `${hoveredCells[0].offsetLeft}px`;
+        shipUnit.style.top = `${hoveredCells[0].offsetTop}px`;
+        console.log('waw')
+      } else {
 
-      const nearestCellAtMid = document.elementsFromPoint(shipPosX + shipWidth / 2, shipPosY + shipHeight / 2)
-      .find(node => node.className === 'cell')
+        // Place the ship unit back to its previous placement
+        shipUnit.style.left = `${currentPosX}px`;
+        shipUnit.style.top = `${currentPosY}px`;
 
+        hoveredCells.forEach(cell => {
+          if (cell) {
+            cell.classList.remove('hover');
+            cell.classList.remove('invalid');
+          }
+        })
+      }
 
+      newPlacement.forEach(coor => {
+        const occupiedCell = document.querySelector(`div.cell[data-column='${coor[0]}'][data-row='${coor[1]}']`);
+        occupiedCell.classList.add('occupied');
+      })
+      
+      // Execute setPlace method with newPlacement array
+      shipObj.setPlace(shipObj.board, newPlacement);
+      
       // Removes eventListeners upon release
       document.removeEventListener('mousemove', moveShipUnit);
       document.removeEventListener('mouseup', placeShipUnit);
@@ -156,9 +209,7 @@ const selectShip = function (event) {
     // Add event listener upon clicking ship unit
     document.addEventListener('mousemove', moveShipUnit);
     document.addEventListener('mouseup', placeShipUnit);
-  }
-
-  
+  }  
 }
 
 
