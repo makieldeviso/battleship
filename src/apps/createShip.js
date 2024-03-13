@@ -99,9 +99,8 @@ class Ship {
         board.ships.push(this);
     }
 
-    removePlace (board) {
-        console.log(this.board)
-        console.log(this.placement)
+    removePlace () {
+        console.log('ship removed')
     }
 }
 

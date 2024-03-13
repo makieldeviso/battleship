@@ -48,7 +48,11 @@ const selectShip = function (event) {
   const shipObj = currentPlayerShips.find(ship => ship.name === this.title);
   
   let currentDomPlacement = shipObj.placement.map(coor => document.querySelector(`div.cell[data-column='${coor[0]}'][data-row='${coor[1]}']`));
-
+  
+  let hoveredCells = [];
+  // Remove the shipObj from the gameBoard obj
+  shipObj.removePlace();
+  
   if (event.type === 'mousedown') {
     // Move the ship unit along the cursor
     const firstPosX = shipUnit.offsetLeft - event.clientX;
@@ -56,8 +60,7 @@ const selectShip = function (event) {
 
     // Helper/ Eventlistener function -> mousemove
     const moveShipUnit = function (event) {
-      let newDomPlacement =  [];
-
+      // Ship unit follows the cursor in the DOM while mousedown
       shipUnit.style.left = `${event.clientX + firstPosX}px`;
       shipUnit.style.top = `${event.clientY + firstPosY}px`;
 
@@ -65,56 +68,69 @@ const selectShip = function (event) {
       const shipPosY = shipUnit.offsetTop;
       const shipWidth = shipUnit.clientWidth;
       const shipHeight = shipUnit.clientHeight;
-      const midPoint = shipPosX + shipWidth / 2;
-      let orientation = shipHeight > shipWidth? 'vertical' : 'horizontal';
+      const orientation = shipHeight > shipWidth? 'vertical' : 'horizontal';
 
-      const nearestCellAtMid = document.elementsFromPoint(shipPosX + shipWidth / 2, shipPosY + shipHeight / 2)
-      .find(node => node.className === 'cell');
+      // Get nearest cell at head and tail
+      let headNearCell;
+      let tailNearCell;
+      if (orientation === 'vertical') {
+        headNearCell = document.elementsFromPoint(shipPosX + shipWidth/2, shipPosY + shipWidth/2)
+        .find(node => node.className === 'cell');
 
-      // Note: conditional checks if a fitting cell is detected
-      if (nearestCellAtMid) {
-        // Find new a fitting new placement
-        const midCellX = nearestCellAtMid.dataset.column.charCodeAt(0);
-        const midCellY = Number(nearestCellAtMid.dataset.row);
+        tailNearCell = document.elementsFromPoint(shipPosX + shipWidth/2, shipPosY + shipHeight - shipWidth/2)
+        .find(node => node.className === 'cell');
 
-        newDomPlacement.push(nearestCellAtMid);
+      } else {
+        headNearCell = document.elementsFromPoint(shipPosX + shipHeight/2, shipPosY + shipHeight/2)
+        .find(node => node.className === 'cell');
 
-        // Select and push adjacent to (right or down) cells from mid cell to newDomPlacement
-        for (let i = 1; i <= Math.floor(shipObj.length/2); i++) {
-          let adjCellX;
-          let adjCellY;
+        tailNearCell = document.elementsFromPoint(shipPosX + shipWidth - shipHeight/2, shipPosY + shipHeight/2)
+        .find(node => node.className === 'cell');
+      }
+
+      const newDomPlacement =  [headNearCell, tailNearCell];
+      
+      for (let i = 1; newDomPlacement.length < shipObj.length; i++) {
+        let adjCellX;
+        let adjCellY;
+        let adjCell;
+
+        if (headNearCell) {
           if (orientation === 'vertical') {
-            adjCellX = String.fromCharCode(midCellX);
-            adjCellY = midCellY - i;
-          } else {
-            adjCellX = String.fromCharCode(midCellX + i);
-            adjCellY = midCellY;
-          }
-          newDomPlacement.push(document.querySelector(`div.cell[data-column='${adjCellX}'][data-row='${adjCellY}']`));
-        }
+            adjCellX = String.fromCharCode(headNearCell.dataset.column.charCodeAt(0));
+            adjCellY = Number(headNearCell.dataset.row) - i;
 
-        // Select and push remaining adjacent cells (up or left) of mid to newDOmPlacement
-        for (let i = 1;  newDomPlacement.length < shipObj.length ; i++) {
-          let adjCellX;
-          let adjCellY;
-          if (orientation === 'vertical') {
-            adjCellX = String.fromCharCode(midCellX);
-            adjCellY = midCellY + i;
           } else {
-            adjCellX = String.fromCharCode(midCellX - i);
-            adjCellY = midCellY;
+            adjCellX = String.fromCharCode(headNearCell.dataset.column.charCodeAt(0) + i);
+            adjCellY = Number(headNearCell.dataset.row);
           }
 
-          newDomPlacement.unshift(document.querySelector(`div.cell[data-column='${adjCellX}'][data-row='${adjCellY}']`));
+          adjCell = document.querySelector(`div.cell[data-column='${adjCellX}'][data-row='${adjCellY}']`);
+          newDomPlacement.splice(newDomPlacement.length-1, 0, adjCell);
+
+        } else if (tailNearCell) {
+          if (orientation === 'vertical') {
+            adjCellX = String.fromCharCode(tailNearCell.dataset.column.charCodeAt(0));
+            adjCellY = Number(tailNearCell.dataset.row) + i;
+            
+          } else {
+            adjCellX = String.fromCharCode(tailNearCell.dataset.column.charCodeAt(0) - i);
+            adjCellY = Number(tailNearCell.dataset.row);
+          }
+
+          adjCell = document.querySelector(`div.cell[data-column='${adjCellX}'][data-row='${adjCellY}']`);
+          newDomPlacement.splice(newDomPlacement.length-1, 0, adjCell);
+
+        } else {
+          newDomPlacement.splice(newDomPlacement.length-1, 0, null);
         }
-
-
-        shipObj.removePlace();
 
       }
+
+      console.log(newDomPlacement)
       
-      
-    }
+  }
+
 
     // Helper/ Eventlistener function -> mouseup
     const placeShipUnit = function (event) {
