@@ -40,7 +40,6 @@ div.main-grid {
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
 
-    justify-self: ;
 }
 
 div.main-grid div.cell {
@@ -88,11 +87,12 @@ div.play-grid {
 div.play-grid div.ship-unit {
     /* tally board ship units */
     width: max-content;
-    display: flex;
-    justify-content: center;
-    flex-wrap: nowrap;
+    height: max-content;
+    display: grid;
+    grid-template-columns: 1fr; /* this changes with JS  */
+    grid-template-columns: repeat(5, 1fr); /* this changes with JS  */
 
-    border: 2px solid red;
+    border: 1px solid red;
     background-color: rgba(255, 0, 0, 0.3);
 
     position: absolute;
@@ -102,7 +102,32 @@ div.play-grid div.ship-unit {
 div.play-grid div.ship-unit div.ship-cell {
     width: var(--cell-size);
     height: var(--cell-size);
+}
 
+div.play-grid div.ship-unit.selected {
+   border: 2px solid blue;
+}
+
+div.play-grid div.ship-unit.carrier[data-dir="up"] {
+    background-image: url("../assets/carrier-up.png");
+}
+
+div.play-grid div.ship-unit.carrier[data-dir="down"] {
+    background-image: url("../assets/carrier-down.png");
+}
+
+div.play-grid div.ship-unit.carrier[data-dir="left"] {
+    background-image: url("../assets/carrier-left.png");
+}
+
+div.play-grid div.ship-unit.carrier[data-dir="right"] {
+    background-image: url("../assets/carrier-right.png");
+}
+
+div.play-grid div.ship-unit {
+    background-size: 95% 95%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 

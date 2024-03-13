@@ -1,4 +1,5 @@
 import GamePlay from "./gameplay";
+import memory from "./memoryHandler";
 
 // UI Scripts
 import { createGridInBoard } from "./domGridCreator";
@@ -24,6 +25,7 @@ const gameStart = function () {
 
   const playerShips = newGame.player.gameBoard.ships;
   playerShips.forEach(ship => createShipTally(ship, 'player'));
+  playerShips.forEach(ship => createShipUnit(ship, 'player'));
 
   // !!!!!!!!!! temp execution
   const playerBoard = newGame.player.gameBoard.board;
@@ -35,8 +37,18 @@ const gameStart = function () {
     }
   })
 
-  playerShips.forEach(ship => createShipUnit(ship, 'player'));
+  // !!!!!!!!!! temp execution
+  const computerBoard = newGame.computer.gameBoard.board;
+  Object.keys(computerBoard).forEach(key => {
+    if (computerBoard[key].occupied) {
+      const {column, row} = computerBoard[key];
+      // Note: showShipPlacement requires array of coordinates as argument
+      showShipPlacement([[column, row]], domComputerBoard )
+    }
+  })
 
+  // Save current game to memory
+  memory.current = newGame;
 }
 
 

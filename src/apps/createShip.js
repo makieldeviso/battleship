@@ -4,6 +4,7 @@ class Ship {
         this.length = length;
         this.hitPoints = 0;
         this.sunk = false;
+        this.board = null;
     }
 
     hit() {
@@ -91,8 +92,16 @@ class Ship {
         // Logs the ship's placement as a property
         this.placement = coordinates;
 
+        // Ship logs which board it is placed
+        this.board = board;
+
         // Save the ships in the game board as an array in ships property
         board.ships.push(this);
+    }
+
+    removePlace (board) {
+        console.log(this.board)
+        console.log(this.placement)
     }
 }
 
