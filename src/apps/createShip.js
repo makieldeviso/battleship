@@ -102,12 +102,19 @@ class Ship {
     removePlace () {
         const gameBoard = this.board.board;
 
+        // Remove the ship from the board
         this.placement.forEach(coor => {
             const cellName = `${coor[0]},${coor[1]}`
             gameBoard[cellName].occupied = null
         })
 
+        // Remove ship placement coordinates array
         this.placement = [];
+
+        // Remove the ship from the board's array of ships property
+        const shipIndex = this.board.ships.findIndex(ship => ship.name === this.name);
+        this.board.ships.splice(shipIndex, 1)
+        
     }
 }
 

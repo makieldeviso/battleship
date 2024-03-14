@@ -108,7 +108,7 @@ div.play-grid div.ship-unit {
     background-color: rgba(255, 0, 0, 0.3);
 
     position: absolute;
-    cursor: pointer;
+    z-index: 2;
 }
 
 div.play-grid div.ship-unit div.ship-cell {
@@ -118,6 +118,7 @@ div.play-grid div.ship-unit div.ship-cell {
 
 div.play-grid div.ship-unit.selected {
    border: 2px solid blue;
+   z-index: 5;
 }
 
 div.play-grid div.ship-unit.carrier[data-dir="up"] {
