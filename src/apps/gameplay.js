@@ -24,22 +24,8 @@ class GamePlay {
     // Initially place random ship placement for the player at start
     computerPlaceShips(playerBoard); 
     this.player.gameBoard = playerBoard;
-    this.phase = 'playerPlaceShip';
-  }
-
-  playerSelectShipToPlace (length, shipName) {
-    const newShip = new Ship(length, shipName);
-    return newShip
-  }
-
-  playerPlaceShip (shipObj, coordinates) {
-    shipObj.setPlace(this.player.gameBoard, coordinates);
-    if (this.player.gameBoard.ships.length === this.maxShips) {
-      this.phase = 'playerAttackTurn'
-    }
 
   }
-
 }
 
 export default GamePlay

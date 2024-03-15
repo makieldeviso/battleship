@@ -104,8 +104,8 @@ class Ship {
 
         // Remove the ship from the board
         this.placement.forEach(coor => {
-            const cellName = `${coor[0]},${coor[1]}`
-            gameBoard[cellName].occupied = null
+            const cellName = `${coor[0]},${coor[1]}`;
+            gameBoard[cellName].occupied = null;
         })
 
         // Remove ship placement coordinates array

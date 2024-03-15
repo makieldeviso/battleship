@@ -17,7 +17,7 @@ const gameStart = function () {
   // Create grid for the DOM using data from newGame
   createGridInBoard(newGame.computer, domComputerBoard);
   createGridInBoard(newGame.player, domPlayerBoard);
-  console.log(newGame)
+  console.log(newGame);
 
   // Create ship tally board
   const computerShips = newGame.computer.gameBoard.ships;
@@ -25,6 +25,8 @@ const gameStart = function () {
 
   const playerShips = newGame.player.gameBoard.ships;
   playerShips.forEach(ship => createShipTally(ship, 'player'));
+
+  // Initially places ships for the player in random spots
   playerShips.forEach(ship => createShipUnit(ship, 'player'));
 
   // !!!!!!!!!! temp execution
