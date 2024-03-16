@@ -15,12 +15,12 @@ class GamePlay {
 
   start () {
     // Computer creates board and place ships
-    const compBoard = new GameBoard();
+    const compBoard = new GameBoard(this.computer.name);
     computerPlaceShips(compBoard);
     this.computer.gameBoard = compBoard;
 
     // Create board for player
-    const playerBoard = new GameBoard();
+    const playerBoard = new GameBoard(this.player.name);
     // Initially place random ship placement for the player at start
     computerPlaceShips(playerBoard); 
     this.player.gameBoard = playerBoard;

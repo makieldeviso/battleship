@@ -1,10 +1,12 @@
+import memory from "./memoryHandler";
+
 class Ship {
     constructor (length, name) {
         this.name = name;
         this.length = length;
         this.hitPoints = 0;
         this.sunk = false;
-        this.board = null;
+        this.owner = null;
     }
 
     hit() {
@@ -92,12 +94,15 @@ class Ship {
         // Logs the ship's placement as a property
         this.placement = coordinates;
 
+        // Logs which board the place by saving the owner name 
+        this.owner = board.owner;
+
         // Save the ships in the game board as an array in ships property
         board.ships.push(this);
     }
 
-    removePlace (board) {
-        const gameBoard = board;
+    removePlace () {
+        const gameBoard = memory.current.player.name === this.owner ? memory.current.player.gameBoard : memory.current.computer.gameBoard 
 
         // Remove the ship from the board
         this.placement.forEach(coor => {
@@ -110,12 +115,13 @@ class Ship {
 
         // Remove the ship from the board's array of ships property
         const shipIndex = gameBoard.ships.findIndex(ship => ship.name === this.name);
-        gameBoard.ships.splice(shipIndex, 1)
+        gameBoard.ships.splice(shipIndex, 1);
+
+        return gameBoard
     }
 
     movePlace (coordinates) {
-        const gameBoard = this.board;
-        this.removePlace();
+        const gameBoard = this.removePlace();
         this.setPlace(gameBoard, coordinates);
     }
 }

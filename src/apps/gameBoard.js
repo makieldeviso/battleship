@@ -58,7 +58,8 @@ const createBoard = () => {
 
 
 class GameBoard {
-    constructor () {
+    constructor (owner) {
+        this.owner = owner;
         this.board = createBoard();
         this.ships = [];
         this.allShipsSunk = false;
