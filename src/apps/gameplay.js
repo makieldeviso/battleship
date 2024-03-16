@@ -24,8 +24,14 @@ class GamePlay {
     // Initially place random ship placement for the player at start
     computerPlaceShips(playerBoard); 
     this.player.gameBoard = playerBoard;
-
+    this.phase = 'playerPlaceShip';
   }
+
+  playerPlacedShips () {
+    this.phase = 'playerAttackTurn';
+  }
+
+
 }
 
 export default GamePlay
