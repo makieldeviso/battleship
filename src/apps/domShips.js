@@ -106,7 +106,7 @@ const selectShipUnit = function (event) {
     this.classList.add('selected');
   
     // Remove the shipObj from the gameBoard obj
-    shipObj.removePlace();
+    shipObj.removePlace(memory.current.player.gameBoard);
 
     // Remove UI indicator of occupied cell
     shipMoveHandler.getCurrentDomPlacement().forEach(cell => cell.classList.remove('occupied'))
@@ -275,7 +275,7 @@ const placeShipUnit = function (event) {
 
   shipUnit.classList.remove('selected');
   // Execute setPlace method with newPlacement array
-  shipObj.setPlace(shipObj.board, newPlacement);
+  shipObj.setPlace(memory.current.player.gameBoard, newPlacement);
 
   // Add/ Removes eventListeners
   shipMoveHandler.shipUnit.removeEventListener('mousemove', moveShipUnit);

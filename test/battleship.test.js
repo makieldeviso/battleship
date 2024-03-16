@@ -265,8 +265,7 @@ describe('Game algorithms', () => {
   });
 
   test ('Ships can be named', () => {
-    const carrier = new Ship(5, 'Carrier')
-
+    const carrier = new Ship(5, 'Carrier');
     expect(carrier).toEqual(
       expect.objectContaining({
         name: 'Carrier',
@@ -284,12 +283,29 @@ describe('Game algorithms', () => {
   test ('When player is done placing, game board change status', () => {
     const newGame = new GamePlay();
     newGame.start();
-
     newGame.playerPlacedShips();
-
     expect(newGame.phase).toMatch('playerAttackTurn');
-
   })
+
+  test ('Player ships can be moved before attacking phase', () => {
+    const newGame = new GamePlay();
+    newGame.start();
+    
+    const playerDestroyer = newGame.player.gameBoard.ships.find(ship => ship.name === 'Destroyer');
+    const playerBattleship = newGame.player.gameBoard.ships.find(ship => ship.name === 'Battleship');
+    const playerSubmarine = newGame.player.gameBoard.ships.find(ship => ship.name === 'Submarine');
+    const playerPatrol = newGame.player.gameBoard.ships.find(ship => ship.name === 'Patrol Boat');
+    const playerCarrier = newGame.player.gameBoard.ships.find(ship => ship.name === 'Carrier');
+    
+    playerBattleship.removePlace();
+    playerSubmarine.removePlace();
+    playerPatrol.removePlace();
+    playerCarrier.removePlace();
+
+    playerDestroyer.movePlace([['B', 10], ['C', 10], ['D', 10]]);
+    expect(playerDestroyer.placement).toEqual([['B', 10], ['C', 10], ['D', 10]]);
+
+  });
 
 })
 

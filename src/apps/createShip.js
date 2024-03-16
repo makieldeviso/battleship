@@ -92,29 +92,31 @@ class Ship {
         // Logs the ship's placement as a property
         this.placement = coordinates;
 
-        // Ship logs which board it is placed
-        this.board = board;
-
         // Save the ships in the game board as an array in ships property
         board.ships.push(this);
     }
 
-    removePlace () {
-        const gameBoard = this.board.board;
+    removePlace (board) {
+        const gameBoard = board;
 
         // Remove the ship from the board
         this.placement.forEach(coor => {
             const cellName = `${coor[0]},${coor[1]}`;
-            gameBoard[cellName].occupied = null;
+            gameBoard.board[cellName].occupied = null;
         })
 
         // Remove ship placement coordinates array
         this.placement = [];
 
         // Remove the ship from the board's array of ships property
-        const shipIndex = this.board.ships.findIndex(ship => ship.name === this.name);
-        this.board.ships.splice(shipIndex, 1)
-        
+        const shipIndex = gameBoard.ships.findIndex(ship => ship.name === this.name);
+        gameBoard.ships.splice(shipIndex, 1)
+    }
+
+    movePlace (coordinates) {
+        const gameBoard = this.board;
+        this.removePlace();
+        this.setPlace(gameBoard, coordinates);
     }
 }
 
