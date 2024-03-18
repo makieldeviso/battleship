@@ -1,5 +1,6 @@
 import memory from "./memoryHandler";
 
+// Utility function for formatting ship name string
 const shipNameFormat = function (shipObj) {
   const stringArray = shipObj.name.split(' ');
   const lowerStringArray = stringArray.map(string => string[0].toLowerCase() + string.slice(1));
@@ -7,7 +8,7 @@ const shipNameFormat = function (shipObj) {
 }
 
 const showShipPlacement = function (coordinates, domBoard) {
-  // Reiterates over the coordinates argument to make UI changes
+  // Reiterates over the coordinates argument to make UI changes. Adds occupied class to cells
   coordinates.forEach(point => {
     // Note: point[0] -> column, point[1] -> row
     const colSelector = `[data-column='${point[0]}']`;
@@ -18,30 +19,33 @@ const showShipPlacement = function (coordinates, domBoard) {
 }
 
 // Helper function for createShipTally and createShipUnit
+// Creates shipUnit element with attributes
 const createDomShip = function (shipObj) {
-  const shipWhole = document.createElement('div');
+  const shipUnit = document.createElement('div');
   const shipName = shipNameFormat(shipObj);
-  shipWhole.classList.add(`${shipName}`);
-  shipWhole.setAttribute('title', shipObj.name);
+  shipUnit.classList.add(`${shipName}`);
+  shipUnit.setAttribute('title', shipObj.name);
 
   for (let i = 0; i < shipObj.length; i++) {
     const shipCell = document.createElement('div');
     shipCell.classList.add('ship-cell');
-    shipWhole.appendChild(shipCell);
+    shipUnit.appendChild(shipCell);
   }
 
-  return shipWhole;
+  return shipUnit;
 }
 
+// Creates ship tally/ score board
 const createShipTally = function (shipObj, playerName) {
-  const shipWhole = createDomShip(shipObj);
-  shipWhole.setAttribute('id', `${playerName}-${shipNameFormat(shipObj)}-tally`);
+  const shipUnit = createDomShip(shipObj);
+  shipUnit.setAttribute('id', `${playerName}-${shipNameFormat(shipObj)}-tally`);
 
   const tallyCont = document.querySelector(`div#${playerName}-tally`);
-  tallyCont.appendChild(shipWhole);
+  tallyCont.appendChild(shipUnit);
 }
 
-
+// Saves the events of moving ships in the board
+let shipMoveHandler;
 class ShipMoveHandler {
   constructor (shipNode, clickEvent) {
     this.shipUnit = shipNode;
@@ -90,12 +94,9 @@ class ShipMoveHandler {
   setHoveredCells (coordinatesArray) {
     this.hoveredCells = coordinatesArray;
   }
-
 }
 
-let shipMoveHandler;
-
-// Event listener function
+// Event listener function (start)
 const selectShipUnit = function (event) { 
   if (event.button === 0) {
     // Set ship clicked for shipMoveHandler
@@ -116,7 +117,7 @@ const selectShipUnit = function (event) {
   } 
 }
 
-// Helper function for moving ship unit
+// Helper function for moving ship unit. Not an eventListener function
 const createNewDomPlacement = function () {
   const {shipUnit, shipObj} = shipMoveHandler;
   const shipPosX = shipUnit.offsetLeft;
@@ -198,11 +199,11 @@ const createNewDomPlacement = function () {
   return newDomPlacement
 }
 
-// Helper/ Eventlistener function -> mousemove
+// Eventlistener function -> mousemove
 const moveShipUnit = function (event) {
   // Move the ship unit along the cursor
   // Note: event.clientX and Y is position of cursor while moving
-  const {shipUnit, shipObj} = shipMoveHandler;
+  const {shipUnit} = shipMoveHandler;
 
   // Ship follows the cursor when mouse is moved
   shipUnit.style.left = `${event.clientX + shipMoveHandler.getFirstClickPos(event).x}px`;
@@ -239,7 +240,7 @@ const moveShipUnit = function (event) {
   shipMoveHandler.setHoveredCells(newDomPlacement);
 }
 
-// Helper/ Eventlistener function -> mouseup
+// Eventlistener function -> mouseup
 const placeShipUnit = function (event) {
   const eventIsMouseUp = event.type === 'mouseup';
   const eventIsDblClick = event.type === 'dblclick';
@@ -252,8 +253,10 @@ const placeShipUnit = function (event) {
     && !shipMoveHandler.hoveredCells.includes(undefined) 
     && shipMoveHandler.hoveredCells.length !== 0;
   
-
-  if (hoveredCellsAreValid && event.button === 0 && eventIsMouseUp) {
+  if (
+    (hoveredCellsAreValid && event.button === 0 && eventIsMouseUp) ||
+    (hoveredCellsAreValid && eventIsDblClick)
+    ){
     // Note: event.button === 2 right click event. Ensure this triggers only for left mouse click
     // Create newPlacement array as coordinates for new ship placement 
     newPlacement = shipMoveHandler.hoveredCells.map(cell => [cell.dataset.column, Number(cell.dataset.row)]);
@@ -264,7 +267,12 @@ const placeShipUnit = function (event) {
 
     placementSuccessful = true;
     
-  } else if (!hoveredCellsAreValid && eventIsMouseUp || event.button === 2) {
+  } else if (
+      ( !hoveredCellsAreValid && eventIsMouseUp ) || 
+      ( !hoveredCellsAreValid && eventIsDblClick ) ||
+      ( event.button === 2 )
+    ){
+
     event.preventDefault();
 
     // Place the ship unit back to its previous placement
@@ -280,30 +288,7 @@ const placeShipUnit = function (event) {
 
     placementSuccessful = false;
 
-  } else if ( !hoveredCellsAreValid && eventIsDblClick ) {
-    // Place the ship unit back to its previous placement
-    shipUnit.style.left = `${shipMoveHandler.initShipPos.x}px`;
-    shipUnit.style.top = `${shipMoveHandler.initShipPos.y}px`;
-
-    shipMoveHandler.hoveredCells.forEach(cell => {
-      if (cell) {
-        cell.classList.remove('hover');
-        cell.classList.remove('invalid');
-      }
-    })
-
-    placementSuccessful = false;
-
-  } else if ( hoveredCellsAreValid && eventIsDblClick ) {
-    newPlacement = shipMoveHandler.hoveredCells.map(cell => [cell.dataset.column, Number(cell.dataset.row)]);
-
-    // Place the ship unit to new placement on DOM
-    shipUnit.style.left = `${shipMoveHandler.hoveredCells[0].offsetLeft}px`;
-    shipUnit.style.top = `${shipMoveHandler.hoveredCells[0].offsetTop}px`;
-
-    placementSuccessful = true;
-  }
-  
+  } 
   // Adds occupied and remove hover class for occupied cells
   newPlacement.forEach(coor => {
     const occupiedCell = document.querySelector(`div.cell[data-column='${coor[0]}'][data-row='${coor[1]}']`);
@@ -326,7 +311,9 @@ const placeShipUnit = function (event) {
   return placementSuccessful
 }
 
-const rotateShipUnit = async function (event) {
+// EventListener function -> rotates the shipUnit orientation
+// Note: this function utilizes createNewDomPlacement and placeShipUnit functions
+const rotateShipUnit = function (event) {
   const {shipUnit, shipObj} = shipMoveHandler;
   // const midPointX = shipUnit.offsetLeft + (shipUnit.clientWidth / 2);
   // const midPointY = shipUnit.offsetLeft + (shipUnit.clientHeight / 2);
@@ -389,14 +376,16 @@ const rotateShipUnit = async function (event) {
     shipUnit.style.gridTemplateRows = iniTemplateRows;
   }
 }
+// Event listener function (end)
 
+// Creates the shipUnit placed on the DOM
 const createShipUnit = function (shipObj, playerName) {
-  const shipWhole = createDomShip(shipObj);
-  shipWhole.setAttribute('id', `${playerName}-${shipNameFormat(shipObj)}-unit`);
-  shipWhole.classList.add('ship-unit');
+  const shipUnit = createDomShip(shipObj);
+  shipUnit.setAttribute('id', `${playerName}-${shipNameFormat(shipObj)}-unit`);
+  shipUnit.classList.add('ship-unit');
   
   const playGrid = document.querySelector(`div#${playerName}-grid.play-grid`);
-  playGrid.appendChild(shipWhole);
+  playGrid.appendChild(shipUnit);
 
   // Place ship at its occupied cell
   const shipPlacement = shipObj.placement;
@@ -412,33 +401,33 @@ const createShipUnit = function (shipObj, playerName) {
   if (shipHead[0] === shipTail[0]) {
     // Note: orientation = vertical
     // Since div is vertical its width is 1 cell and height is num of cells
-    shipWhole.style.gridTemplateColumns = `1fr`;
-    shipWhole.style.gridTemplateRows = `repeat(${shipPlacement.length}, 1fr)`;
+    shipUnit.style.gridTemplateColumns = `1fr`;
+    shipUnit.style.gridTemplateRows = `repeat(${shipPlacement.length}, 1fr)`;
 
     // Flex box will always wrap downwards so the position basis must be changed
     // between the head and tail. If head is higher position use head, else use tail as base point
     if (shipHead[1] > shipTail[1]) {
       pointBase = shipHead;
-      shipWhole.dataset.dir = 'up';
+      shipUnit.dataset.dir = 'up';
     } else {
       pointBase = shipTail;
-      shipWhole.dataset.dir = 'down';
+      shipUnit.dataset.dir = 'down';
     }
 
   } else {
     // Note: orientation = horizontal
     // Since div is horizontal its width is num of cells and height is 1 cell
-    shipWhole.style.gridTemplateColumns = `repeat(${shipPlacement.length}, 1fr)`;
-    shipWhole.style.gridTemplateRows = '1fr';
+    shipUnit.style.gridTemplateColumns = `repeat(${shipPlacement.length}, 1fr)`;
+    shipUnit.style.gridTemplateRows = '1fr';
 
-    // Flex box will always wrap rightwards so the position basis must be changed
+    // Grid will always wrap rightwards so the position basis must be changed
     // between the head and tail. If head id left side use head, else use tail as base point
     if (shipHead[0].charCodeAt(0) < shipTail[0].charCodeAt(0)) {
       pointBase = shipHead;
-      shipWhole.dataset.dir = 'right';
+      shipUnit.dataset.dir = 'right';
     } else {
       pointBase = shipTail;
-      shipWhole.dataset.dir = 'left';
+      shipUnit.dataset.dir = 'left';
     }
   }
 
@@ -451,14 +440,14 @@ const createShipUnit = function (shipObj, playerName) {
     left: `${headCell.offsetLeft}px`
   }
 
-  shipWhole.style.top = shipHeadPos.top;
-  shipWhole.style.left = shipHeadPos.left;
+  shipUnit.style.top = shipHeadPos.top;
+  shipUnit.style.left = shipHeadPos.left;
   // Ship placement on DOM (end)
 
   if (playerName === 'player') {
-    shipWhole.addEventListener('mousedown', selectShipUnit);
-    shipWhole.addEventListener('dblclick', rotateShipUnit);
-    shipWhole.addEventListener('contextmenu', (event) => event.preventDefault());
+    shipUnit.addEventListener('mousedown', selectShipUnit);
+    shipUnit.addEventListener('dblclick', rotateShipUnit);
+    shipUnit.addEventListener('contextmenu', (event) => event.preventDefault());
   }
 }
 
