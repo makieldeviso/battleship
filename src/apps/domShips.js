@@ -102,35 +102,23 @@ const selectShipUnit = function (event) {
     shipMoveHandler = new ShipMoveHandler(this, event);
     event.preventDefault();
 
-    const {shipObj} = shipMoveHandler;
     this.classList.add('selected');
 
     // Remove UI indicator of occupied cell
     shipMoveHandler.getCurrentDomPlacement().forEach(cell => cell.classList.remove('occupied'))
 
-    // Add/ remove event listener
+    // Remove event listener
     shipMoveHandler.shipUnit.removeEventListener('mousedown', selectShipUnit);
     
-    // Add/ remove event listeners
+    // Add event listeners
     shipMoveHandler.shipUnit.addEventListener('mousemove', moveShipUnit);
     shipMoveHandler.shipUnit.addEventListener('mouseup', placeShipUnit);  
   } 
 }
 
-
-// Helper/ Eventlistener function -> mousemove
-const moveShipUnit = function (event) {
-  // Move the ship unit along the cursor
-  // Note: event.clientX and Y is position of cursor while moving
+// Helper function for moving ship unit
+const createNewDomPlacement = function () {
   const {shipUnit, shipObj} = shipMoveHandler;
-
-  // Ship follows the cursor when mouse is moved
-  shipUnit.style.left = `${event.clientX + shipMoveHandler.getFirstClickPos(event).x}px`;
-  shipUnit.style.top = `${event.clientY + shipMoveHandler.getFirstClickPos(event).y}px`;
-
-  // Remove occupied UI indicator to cells in the DOM
-  shipMoveHandler.getCurrentDomPlacement().forEach(cell => cell.classList.remove('occupied'));
-
   const shipPosX = shipUnit.offsetLeft;
   const shipPosY = shipUnit.offsetTop;
   const shipWidth = shipUnit.clientWidth;
@@ -206,6 +194,25 @@ const moveShipUnit = function (event) {
       newDomPlacement.splice(newDomPlacement.length - 1, 0, null);
     }
   }
+
+  return newDomPlacement
+}
+
+// Helper/ Eventlistener function -> mousemove
+const moveShipUnit = function (event) {
+  // Move the ship unit along the cursor
+  // Note: event.clientX and Y is position of cursor while moving
+  const {shipUnit, shipObj} = shipMoveHandler;
+
+  // Ship follows the cursor when mouse is moved
+  shipUnit.style.left = `${event.clientX + shipMoveHandler.getFirstClickPos(event).x}px`;
+  shipUnit.style.top = `${event.clientY + shipMoveHandler.getFirstClickPos(event).y}px`;
+
+  // Remove occupied UI indicator to cells in the DOM
+  shipMoveHandler.getCurrentDomPlacement().forEach(cell => cell.classList.remove('occupied'));
+
+  // Execute createNewDomPlacement which return array of Nodes
+  const newDomPlacement = createNewDomPlacement();
   
   // Actively change visual indicator of cell placement validity of ship unit to the board
   // Remove UI indicator of placement when ship unit is being moved
@@ -234,14 +241,19 @@ const moveShipUnit = function (event) {
 
 // Helper/ Eventlistener function -> mouseup
 const placeShipUnit = function (event) {
+  const eventIsMouseUp = event.type === 'mouseup';
+  const eventIsDblClick = event.type === 'dblclick';
+  let placementSuccessful = false;
+
   const {shipUnit, shipObj} = shipMoveHandler;
   let newPlacement = shipMoveHandler.initShipPlacement;
-  
+
   const hoveredCellsAreValid = !shipMoveHandler.hoveredCells.includes(null) 
     && !shipMoveHandler.hoveredCells.includes(undefined) 
     && shipMoveHandler.hoveredCells.length !== 0;
+  
 
-  if (hoveredCellsAreValid && event.button === 0) {
+  if (hoveredCellsAreValid && event.button === 0 && eventIsMouseUp) {
     // Note: event.button === 2 right click event. Ensure this triggers only for left mouse click
     // Create newPlacement array as coordinates for new ship placement 
     newPlacement = shipMoveHandler.hoveredCells.map(cell => [cell.dataset.column, Number(cell.dataset.row)]);
@@ -249,8 +261,10 @@ const placeShipUnit = function (event) {
     // Place the ship unit to new placement on DOM
     shipUnit.style.left = `${shipMoveHandler.hoveredCells[0].offsetLeft}px`;
     shipUnit.style.top = `${shipMoveHandler.hoveredCells[0].offsetTop}px`;
+
+    placementSuccessful = true;
     
-  } else if (!hoveredCellsAreValid || event.button === 2) {
+  } else if (!hoveredCellsAreValid && eventIsMouseUp || event.button === 2) {
     event.preventDefault();
 
     // Place the ship unit back to its previous placement
@@ -263,10 +277,37 @@ const placeShipUnit = function (event) {
         cell.classList.remove('invalid');
       }
     })
+
+    placementSuccessful = false;
+
+  } else if ( !hoveredCellsAreValid && eventIsDblClick ) {
+    // Place the ship unit back to its previous placement
+    shipUnit.style.left = `${shipMoveHandler.initShipPos.x}px`;
+    shipUnit.style.top = `${shipMoveHandler.initShipPos.y}px`;
+
+    shipMoveHandler.hoveredCells.forEach(cell => {
+      if (cell) {
+        cell.classList.remove('hover');
+        cell.classList.remove('invalid');
+      }
+    })
+
+    placementSuccessful = false;
+
+  } else if ( hoveredCellsAreValid && eventIsDblClick ) {
+    newPlacement = shipMoveHandler.hoveredCells.map(cell => [cell.dataset.column, Number(cell.dataset.row)]);
+
+    // Place the ship unit to new placement on DOM
+    shipUnit.style.left = `${shipMoveHandler.hoveredCells[0].offsetLeft}px`;
+    shipUnit.style.top = `${shipMoveHandler.hoveredCells[0].offsetTop}px`;
+
+    placementSuccessful = true;
   }
   
+  // Adds occupied and remove hover class for occupied cells
   newPlacement.forEach(coor => {
     const occupiedCell = document.querySelector(`div.cell[data-column='${coor[0]}'][data-row='${coor[1]}']`);
+    occupiedCell.classList.remove('hover');
     occupiedCell.classList.add('occupied');
   })
 
@@ -282,19 +323,71 @@ const placeShipUnit = function (event) {
   // Return the removed mousedown event upon ship placement
   shipMoveHandler.shipUnit.addEventListener('mousedown', selectShipUnit);
 
+  return placementSuccessful
 }
 
-const rotateShipUnit = function () {
-  let currentRotation = this.style.rotate;
-  if (currentRotation) {
-    const unitIndexStart = currentRotation.match(/[a-z]/).index
-    currentRotation = Number(currentRotation.slice(0, unitIndexStart ))
-  } else if (currentRotation >= 360 || !currentRotation) {
-    currentRotation = 0;
+const rotateShipUnit = async function (event) {
+  const {shipUnit, shipObj} = shipMoveHandler;
+  // const midPointX = shipUnit.offsetLeft + (shipUnit.clientWidth / 2);
+  // const midPointY = shipUnit.offsetLeft + (shipUnit.clientHeight / 2);
+
+  const initShipDir = shipUnit.dataset.dir;
+  const initTemplateCol = shipUnit.style.gridTemplateColumns;
+  const iniTemplateRows = shipUnit.style.gridTemplateRows;
+
+  // Note: horStyle and verStyle contain string values used for styling
+  const horStyle = {col: `repeat(${shipObj.length}, 1fr)`, row: '1fr'};
+  const vertStyle = {col: '1fr', row: `repeat(${shipObj.length}, 1fr)`};
+
+  // Rotate ship direction clockwise to check placement validity
+  // Note: remove class occupied to cells which the shipUnit is currently at
+  const currentDomPlacement = shipMoveHandler.getCurrentDomPlacement();
+  currentDomPlacement.forEach(cell => {
+    cell.classList.remove('occupied');
+  })
+
+  switch (initShipDir) {
+    case 'up' : 
+      shipUnit.dataset.dir = 'right';
+      shipUnit.style.gridTemplateColumns = horStyle.col;
+      shipUnit.style.gridTemplateRows = horStyle.row;
+      break;
+    case 'right' : 
+      shipUnit.dataset.dir = 'down';
+      shipUnit.style.gridTemplateColumns = vertStyle.col;
+      shipUnit.style.gridTemplateRows = vertStyle.row;
+      break;
+    case 'down' : 
+      shipUnit.dataset.dir = 'left'; 
+      shipUnit.style.gridTemplateColumns = horStyle.col;
+      shipUnit.style.gridTemplateRows = horStyle.row;
+      break;
+    case 'left' : 
+      shipUnit.dataset.dir = 'up';
+      shipUnit.style.gridTemplateColumns = vertStyle.col;
+      shipUnit.style.gridTemplateRows = vertStyle.row;
+      break;
+    default: 
+      shipUnit.dataset.dir = 'up';
+      shipUnit.style.gridTemplateColumns = vertStyle.col;
+      shipUnit.style.gridTemplateRows = vertStyle.row;
   }
   
-  this.style.rotate = `${currentRotation + 90}deg`;
-  console.log('double click');
+  // After testing rotation, createNewDomPlacement and save placement to shipMoveHandler
+  const newDomPlacement = createNewDomPlacement();
+  shipMoveHandler.setHoveredCells(newDomPlacement);
+
+  // Execute placeShipUnit by passing this event as argument
+  // Note: placeShipUnit() will return a boolean, weather the new placement is successful or not
+  // Note: successful placement will mutate the player gameBoard (board and ship.placement)
+  const placementSuccessful = placeShipUnit(event);
+
+  // If rotation is unsuccessful shipUnit returns to original placement
+  if (!placementSuccessful) {
+    shipUnit.dataset.dir = initShipDir;
+    shipUnit.style.gridTemplateColumns = initTemplateCol;
+    shipUnit.style.gridTemplateRows = iniTemplateRows;
+  }
 }
 
 const createShipUnit = function (shipObj, playerName) {
@@ -368,7 +461,5 @@ const createShipUnit = function (shipObj, playerName) {
     shipWhole.addEventListener('contextmenu', (event) => event.preventDefault());
   }
 }
-
-
 
   export {showShipPlacement, createShipTally, createShipUnit}
