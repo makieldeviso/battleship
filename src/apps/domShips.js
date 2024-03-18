@@ -98,9 +98,10 @@ class ShipMoveHandler {
 
 // Event listener function (start)
 const selectShipUnit = function (event) { 
-  if (event.button === 0) {
+  if (event.button === 0 && event.detail === 1) {
     // Set ship clicked for shipMoveHandler
     shipMoveHandler = new ShipMoveHandler(this, event);
+    const { shipUnit } = shipMoveHandler;
     event.preventDefault();
 
     this.classList.add('selected');
@@ -109,11 +110,11 @@ const selectShipUnit = function (event) {
     shipMoveHandler.getCurrentDomPlacement().forEach(cell => cell.classList.remove('occupied'))
 
     // Remove event listener
-    shipMoveHandler.shipUnit.removeEventListener('mousedown', selectShipUnit);
+    shipUnit.removeEventListener('mousedown', selectShipUnit);
     
     // Add event listeners
-    shipMoveHandler.shipUnit.addEventListener('mousemove', moveShipUnit);
-    shipMoveHandler.shipUnit.addEventListener('mouseup', placeShipUnit);  
+    shipUnit.addEventListener('mousemove', moveShipUnit);
+    shipUnit.addEventListener('mouseup', placeShipUnit);  
   } 
 }
 
@@ -315,8 +316,8 @@ const placeShipUnit = function (event) {
 // EventListener function -> rotates the shipUnit orientation
 // Note: this function utilizes createNewDomPlacement and placeShipUnit functions
 const rotateShipUnit = function (event) {
+
   const {shipUnit, shipObj} = shipMoveHandler;
-  
   const initShipDir = shipUnit.dataset.dir;
   const initTemplateCol = shipUnit.style.gridTemplateColumns;
   const iniTemplateRows = shipUnit.style.gridTemplateRows;
