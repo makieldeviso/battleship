@@ -120,30 +120,28 @@ const selectShipUnit = function (event) {
 // Helper function for moving ship unit. Not an eventListener function
 const createNewDomPlacement = function () {
   const {shipUnit, shipObj} = shipMoveHandler;
-  const shipPosX = shipUnit.offsetLeft;
-  const shipPosY = shipUnit.offsetTop;
-  const shipWidth = shipUnit.clientWidth;
-  const shipHeight = shipUnit.clientHeight;
+  const shipRect = shipUnit.getBoundingClientRect();
   const orientation = shipMoveHandler.getShipOrientation();
+  const playerBoard = document.querySelector('div#player-grid div.main-grid');
 
   // Get nearest cell at head and tail
   let headNearCell;
   let tailNearCell;
   if (orientation === 'vertical') {
-    headNearCell = document.elementsFromPoint(shipPosX + shipWidth/2, shipPosY + shipWidth/2)
-    .find(node => node.classList.contains('cell'));
+    headNearCell = document.elementsFromPoint(shipRect.x + shipRect.width/2, shipRect.y + shipRect.width/2)
+    .find(node => node.parentNode === playerBoard && node.classList.contains('cell') );
 
-    tailNearCell = document.elementsFromPoint(shipPosX + shipWidth/2, shipPosY + shipHeight - shipWidth/2)
-    .find(node => node.classList.contains('cell'));
-
+    tailNearCell = document.elementsFromPoint(shipRect.x + shipRect.width/2, shipRect.y + shipRect.height - shipRect.width/2)
+    .find(node => node.parentNode === playerBoard && node.classList.contains('cell'));
+    
   } else {
-    headNearCell = document.elementsFromPoint(shipPosX + shipHeight/2, shipPosY + shipHeight/2)
-    .find(node => node.classList.contains('cell'));
+    headNearCell = document.elementsFromPoint(shipRect.x + shipRect.height/2, shipRect.y + shipRect.height/2)
+    .find(node => node.parentNode === playerBoard && node.classList.contains('cell'));
 
-    tailNearCell = document.elementsFromPoint(shipPosX + shipWidth - shipHeight/2, shipPosY + shipHeight/2)
-    .find(node => node.classList.contains('cell'));
+    tailNearCell = document.elementsFromPoint(shipRect.x + shipRect.width - shipRect.height/2, shipRect.y + shipRect.height/2)
+    .find(node => node.parentNode === playerBoard && node.classList.contains('cell'));
   }
-
+  
   // Save the cells nearest to the head and tail of the ship unit
   const newDomPlacement =  [headNearCell, tailNearCell];
 
@@ -238,10 +236,14 @@ const moveShipUnit = function (event) {
 
   // Save the last newDomPlacement to shipMoveHandler hoveredCells upon completing the mouse move
   shipMoveHandler.setHoveredCells(newDomPlacement);
+
+  // Removes double clicking while moving
+  shipUnit.removeEventListener('dblclick', rotateShipUnit);
 }
 
 // Eventlistener function -> mouseup
 const placeShipUnit = function (event) {
+  event.preventDefault();
   const eventIsMouseUp = event.type === 'mouseup';
   const eventIsDblClick = event.type === 'dblclick';
   let placementSuccessful = false;
@@ -254,8 +256,8 @@ const placeShipUnit = function (event) {
     && shipMoveHandler.hoveredCells.length !== 0;
   
   if (
-    (hoveredCellsAreValid && event.button === 0 && eventIsMouseUp) ||
-    (hoveredCellsAreValid && eventIsDblClick)
+    ( hoveredCellsAreValid && event.button === 0 && eventIsMouseUp ) ||
+    ( hoveredCellsAreValid && eventIsDblClick )
     ){
     // Note: event.button === 2 right click event. Ensure this triggers only for left mouse click
     // Create newPlacement array as coordinates for new ship placement 
@@ -272,8 +274,6 @@ const placeShipUnit = function (event) {
       ( !hoveredCellsAreValid && eventIsDblClick ) ||
       ( event.button === 2 )
     ){
-
-    event.preventDefault();
 
     // Place the ship unit back to its previous placement
     shipUnit.style.left = `${shipMoveHandler.initShipPos.x}px`;
@@ -301,12 +301,13 @@ const placeShipUnit = function (event) {
   // Execute setPlace method with newPlacement array
   shipObj.movePlace(newPlacement);
 
-  // Add/ Removes eventListeners
-  shipMoveHandler.shipUnit.removeEventListener('mousemove', moveShipUnit);
-  shipMoveHandler.shipUnit.removeEventListener('mouseup', placeShipUnit);
+  // Remove eventListeners
+  shipUnit.removeEventListener('mousemove', moveShipUnit);
+  shipUnit.removeEventListener('mouseup', placeShipUnit);
 
   // Return the removed mousedown event upon ship placement
-  shipMoveHandler.shipUnit.addEventListener('mousedown', selectShipUnit);
+  shipUnit.addEventListener('mousedown', selectShipUnit);
+  shipUnit.addEventListener('dblclick', rotateShipUnit);
 
   return placementSuccessful
 }
@@ -315,51 +316,52 @@ const placeShipUnit = function (event) {
 // Note: this function utilizes createNewDomPlacement and placeShipUnit functions
 const rotateShipUnit = function (event) {
   const {shipUnit, shipObj} = shipMoveHandler;
-  // const midPointX = shipUnit.offsetLeft + (shipUnit.clientWidth / 2);
-  // const midPointY = shipUnit.offsetLeft + (shipUnit.clientHeight / 2);
-
+  
   const initShipDir = shipUnit.dataset.dir;
   const initTemplateCol = shipUnit.style.gridTemplateColumns;
   const iniTemplateRows = shipUnit.style.gridTemplateRows;
-
-  // Note: horStyle and verStyle contain string values used for styling
-  const horStyle = {col: `repeat(${shipObj.length}, 1fr)`, row: '1fr'};
-  const vertStyle = {col: '1fr', row: `repeat(${shipObj.length}, 1fr)`};
 
   // Rotate ship direction clockwise to check placement validity
   // Note: remove class occupied to cells which the shipUnit is currently at
   const currentDomPlacement = shipMoveHandler.getCurrentDomPlacement();
   currentDomPlacement.forEach(cell => {
     cell.classList.remove('occupied');
-  })
+  });
 
-  switch (initShipDir) {
-    case 'up' : 
-      shipUnit.dataset.dir = 'right';
-      shipUnit.style.gridTemplateColumns = horStyle.col;
-      shipUnit.style.gridTemplateRows = horStyle.row;
-      break;
-    case 'right' : 
-      shipUnit.dataset.dir = 'down';
-      shipUnit.style.gridTemplateColumns = vertStyle.col;
-      shipUnit.style.gridTemplateRows = vertStyle.row;
-      break;
-    case 'down' : 
-      shipUnit.dataset.dir = 'left'; 
-      shipUnit.style.gridTemplateColumns = horStyle.col;
-      shipUnit.style.gridTemplateRows = horStyle.row;
-      break;
-    case 'left' : 
-      shipUnit.dataset.dir = 'up';
-      shipUnit.style.gridTemplateColumns = vertStyle.col;
-      shipUnit.style.gridTemplateRows = vertStyle.row;
-      break;
-    default: 
-      shipUnit.dataset.dir = 'up';
-      shipUnit.style.gridTemplateColumns = vertStyle.col;
-      shipUnit.style.gridTemplateRows = vertStyle.row;
+  if (initShipDir === 'up' || initShipDir === 'down') {
+    // Turn vertical to horizontal
+    shipUnit.dataset.dir = initShipDir === 'up' ? 'right' : 'left';
+    shipUnit.style.gridTemplateColumns = `repeat(${shipObj.length}, 1fr)`;
+    shipUnit.style.gridTemplateRows = '1fr';
+
+    if (shipObj.length > 2 && shipObj.length < 5) {
+      shipUnit.style.left = `${shipUnit.offsetLeft - shipUnit.clientWidth / 2}px`;
+      shipUnit.style.top = `${shipUnit.offsetTop + shipUnit.clientHeight}px`;
+    } else if (shipObj.length === 5) {
+      shipUnit.style.left = `${shipUnit.offsetLeft - shipUnit.clientWidth / 2}px`;
+      shipUnit.style.top = `${shipUnit.offsetTop + shipUnit.clientHeight * 2}px`;
+    }
+
+  } else if (initShipDir === 'right' || initShipDir === 'left') {
+    // Turn horizontal to vertical
+    shipUnit.dataset.dir = initShipDir === 'left' ? 'up' : 'down';
+    shipUnit.style.gridTemplateColumns = '1fr';
+    shipUnit.style.gridTemplateRows = `repeat(${shipObj.length}, 1fr)`;
+
+    if (shipObj.length > 2 && shipObj.length < 4) {
+      shipUnit.style.left = `${shipUnit.offsetLeft + shipUnit.clientWidth}px` ;
+      shipUnit.style.top = `${shipUnit.offsetTop - shipUnit.clientHeight / 2}px`;
+
+    } else if (shipObj.length === 4) {
+      shipUnit.style.left = `${shipUnit.offsetLeft + shipUnit.clientWidth * 1.5}px` ;
+      shipUnit.style.top = `${shipUnit.offsetTop - shipUnit.clientHeight / 3}px`;
+
+    } else if (shipObj.length === 5) {
+      shipUnit.style.left = `${shipUnit.offsetLeft + shipUnit.clientWidth * 2}px`;
+      shipUnit.style.top = `${shipUnit.offsetTop - shipUnit.clientHeight / 2}px`;
+    }
   }
-  
+
   // After testing rotation, createNewDomPlacement and save placement to shipMoveHandler
   const newDomPlacement = createNewDomPlacement();
   shipMoveHandler.setHoveredCells(newDomPlacement);
@@ -434,14 +436,9 @@ const createShipUnit = function (shipObj, playerName) {
   const cellSelector = `div.cell[data-column='${pointBase[0]}'][data-row='${pointBase[1]}']`;
   const selector = `div#${playerName}-grid div.main-grid ${cellSelector}`;
   const headCell = document.querySelector(selector);
-
-  const shipHeadPos = {
-    top: `${headCell.offsetTop}px`,
-    left: `${headCell.offsetLeft}px`
-  }
-
-  shipUnit.style.top = shipHeadPos.top;
-  shipUnit.style.left = shipHeadPos.left;
+   
+  shipUnit.style.top = `${headCell.offsetTop}px`;
+  shipUnit.style.left = `${headCell.offsetLeft}px`;
   // Ship placement on DOM (end)
 
   if (playerName === 'player') {
