@@ -27,7 +27,15 @@ class GamePlay {
     this.phase = 'playerPlaceShip';
   }
 
-  playerPlacedShips () {
+  endStrategyPhase () {
+    this.phase = 'playerAttackTurn';
+  }
+
+  setComputerAttackTurn () {
+    this.phase = 'computerAttackTurn';
+  }
+
+  setPlayerAttackTurn () {
     this.phase = 'playerAttackTurn';
   }
 

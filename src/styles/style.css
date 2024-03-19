@@ -10,6 +10,14 @@
     --common-margin: 16px;
 }
 
+/* Game table (start) */
+div#game-table {
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+}
+/* Game table (end) */
+
+
 /* Play board (start)*/
 div.play-board {
     display: grid;
@@ -62,6 +70,14 @@ div.main-grid div.cell.hover.invalid {
 
 div.main-grid div.cell.occupied {
     background-color: aquamarine;
+}
+
+div.main-grid div.cell[data-attacked="missed"] {
+    background-color: yellow;
+}
+
+div.main-grid div.cell[data-attacked="hit"] {
+    background-color: orangered;
 }
 
 div.column-marker div, div.row-marker div {
@@ -173,4 +189,27 @@ div.tally-board div div.ship-cell {
     border: 1px solid green;
 }
 
-/* Tally board (start)*/
+/* Tally board (end)*/
+
+/* HUD (start) */
+div#hud {
+    width: 200px;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
+}
+
+button#start-btn {
+    width: max-content;
+    height: max-content;
+    font-size: 1.3rem;
+    padding: var(--common-padding)
+}
+
+button#start-btn:hover {
+    cursor: pointer;
+}
+
+/* HUD (end) */
+

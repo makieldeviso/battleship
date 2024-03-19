@@ -449,4 +449,17 @@ const createShipUnit = function (shipObj, playerName) {
   }
 }
 
-  export {showShipPlacement, createShipTally, createShipUnit}
+const removeShipEvents = function () {
+  // Finalize ship strategy phase/ ship movement
+  // Removes event listeners to ships
+  const shipUnits = document.querySelectorAll('div#player-grid div.ship-unit');
+  shipUnits.forEach(ship => {
+    ship.removeEventListener('mousedown', selectShipUnit);
+    ship.removeEventListener('mousemove', moveShipUnit);
+    ship.removeEventListener('mouseup', placeShipUnit);
+    ship.removeEventListener('dblclick', rotateShipUnit);
+  })
+}
+
+
+  export {showShipPlacement, createShipTally, createShipUnit, removeShipEvents}
