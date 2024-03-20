@@ -27,16 +27,14 @@ class GamePlay {
     this.phase = 'playerPlaceShip';
   }
 
-  endStrategyPhase () {
-    this.phase = 'playerAttackTurn';
-  }
-
   setComputerAttackTurn () {
     this.phase = 'computerAttackTurn';
+    return 'computer';
   }
 
   setPlayerAttackTurn () {
     this.phase = 'playerAttackTurn';
+    return 'player';
   }
 
 
