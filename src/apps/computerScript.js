@@ -1,4 +1,3 @@
-import GameBoard from "./gameBoard";
 import Ship from "./createShip";
 
 // Random number generator

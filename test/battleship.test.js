@@ -1,6 +1,7 @@
 import Ship from "../src/apps/createShip";
 import GameBoard from "../src/apps/gameBoard";
 import GamePlay from "../src/apps/gameplay";
+import memory from "../src/apps/memoryHandler";
 
 describe('Structure tests', () => {
   test ('Can create ships', () => {
@@ -283,14 +284,15 @@ describe('Game algorithms', () => {
   test ('When player is done placing, game board change status', () => {
     const newGame = new GamePlay();
     newGame.start();
-    newGame.playerPlacedShips();
+    newGame.setPlayerAttackTurn();
     expect(newGame.phase).toMatch('playerAttackTurn');
   })
 
   test ('Player ships can be moved before attacking phase', () => {
     const newGame = new GamePlay();
     newGame.start();
-    
+    memory.current = newGame;
+   
     const playerDestroyer = newGame.player.gameBoard.ships.find(ship => ship.name === 'Destroyer');
     const playerBattleship = newGame.player.gameBoard.ships.find(ship => ship.name === 'Battleship');
     const playerSubmarine = newGame.player.gameBoard.ships.find(ship => ship.name === 'Submarine');

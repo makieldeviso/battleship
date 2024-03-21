@@ -37,6 +37,10 @@ class GamePlay {
     return 'player';
   }
 
+  checkGameStats (shipObj) {
+
+  }
+
 
 }
 

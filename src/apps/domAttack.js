@@ -11,28 +11,31 @@ class TurnSwitcher {
   }
 
   switch () {
-    const lastTurn = memory.current.phase;
+    const currentGame = memory.getCurrentGame();
+    const lastTurn = currentGame.phase;
     const playerAttackTurn = lastTurn === 'playerAttackTurn';
   
     // If last turn was player, switch to computer
     if (playerAttackTurn) {
-      memory.current.setComputerAttackTurn();
+      currentGame.setComputerAttackTurn();
       this.computerTurnScript();
   
     } else {
-      memory.current.setPlayerAttackTurn();
+      currentGame.setPlayerAttackTurn();
       this.playerTurnScript();
     }
   }
 }
 
-const getAttack = function (cellArg) {
+
+const getAttack = async function (cellArg) {
   // If getAttack is triggered by player by clicking computer grid domCell = this
   // If getAttack is triggered by computer by sending boardCell argument domCell = cellArg
   const domCell = cellArg;
   const domBoard = domCell.parentNode.parentNode;
   const attackReceiver = domBoard.id.includes('player') ? 'player' : 'computer';
-  const attackReceiverBoard = memory.current[attackReceiver].gameBoard;
+  const currentGame = memory.getCurrentGame();
+  const attackReceiverBoard = currentGame[attackReceiver].gameBoard;
   const cellCoordinates = { x: domCell.dataset.column, y: Number(domCell.dataset.row) };
 
   // Execute receiveAttack to receiver gameBoard
@@ -45,16 +48,23 @@ const getAttack = function (cellArg) {
   const domCells = domBoard.querySelectorAll('div.cell')
   domCells.forEach(cell => cell.removeEventListener('click', getAttack));
  
-  return attackReceiverBoard.board[`${cellCoordinates.x},${cellCoordinates.y}`];
+  return {
+    result: attackResult,
+    attackedCell: attackReceiverBoard.board[`${cellCoordinates.x},${cellCoordinates.y}`]
+  }
+}
+
+const checkGameStats = function () {
+
 }
 
 // Helper function for playerAttackComputerPhase
 const playerAttack = async function () {
-  await getAttack(this);
+  const attackDetail = await getAttack(this);
  
   // Switch player
   turnSwitch.switch();
-};
+};  
 
 const playerAttackComputerPhase = function () {
   const computerGridCells = document.querySelectorAll('div#computer-grid div.cell');
@@ -71,20 +81,21 @@ const computerAttackPlayerPhase = async function () {
 
   // Note: getAttack returns the value of the attacked cell
   // attackedCell executes getAttack() within a delayed time
-  const attackedCell = await new Promise ((resolve) => {
+  const attackDetail = await new Promise ((resolve) => {
       setTimeout(() => resolve( getAttack( unAttackedCell[randomIndex] ) ), 500);
     });
 
   // Save computer attack pattern to computer memory through the memoryHandler module
   //  If attack hits, save to last hit
-  memory.computerAttack.setLastAttack(attackedCell);
-  if (attackedCell.attacked === 'hit') memory.computerAttack.setLastHit(attackedCell);
-
+  memory.setComputerLastAttack(attackDetail);
+  if (attackDetail.result === 'hit') memory.setComputerLastHit(attackDetail.attackedCell);
+  
   // Switch player
   turnSwitch.switch();
 }
 
 const startAttack = function () {
+  const currentGame = memory.getCurrentGame();
   // Remove eventListeners to player ship units/ disable moving
   removeShipEvents();
 
@@ -94,7 +105,7 @@ const startAttack = function () {
 
   // Randomize first turner
   const firstTurner = generateRandomNumber(0, 1) === 0 ? 
-    memory.current.setPlayerAttackTurn() : memory.current.setComputerAttackTurn();
+    currentGame.setPlayerAttackTurn() : currentGame.setComputerAttackTurn();
 
   if (firstTurner === 'player') {
     turnSwitch.playerTurnScript();

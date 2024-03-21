@@ -57,7 +57,7 @@ class ShipMoveHandler {
   }
   
   findShipObj () {
-    const currentPlayerShips = memory.current.player.gameBoard.ships;
+    const currentPlayerShips = memory.getCurrentGame().player.gameBoard.ships;
     const shipObject = currentPlayerShips.find(ship => ship.name === this.shipUnit.title);
     return shipObject
   }

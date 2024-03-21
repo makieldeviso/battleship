@@ -1,22 +1,28 @@
-class ComputerAttack {
-    constructor (newAttack) {
-        this.lastAttack = newAttack;
-        this.lastHit = null;
-    }
+class Memory {
+  constructor () {
+      this.current = null;
+      this.computerLastAttack = null;
+      this.computerLastHit = null;
+  }
 
-    setLastAttack (cellObj) {
-        this.lastAttack = cellObj;
-    }
+  setCurrentGame ( gamePlayObj ) {
+    this.current = gamePlayObj;
+  }
 
-    setLastHit (cellObj) {
-        this.lastHit = cellObj;
-    }
+  getCurrentGame () {
+    return this.current
+  }
+
+  setComputerLastAttack ( cellObj ) {
+    this.computerLastAttack = cellObj;
+  }
+
+  setComputerLastHit ( cellObj ) {
+    this.computerLastHit = cellObj;
+  }
+
 }
 
-
-const memory = {
-    current: null,
-    computerAttack: new ComputerAttack(null)
-}
+const memory = new Memory();
 
 export default memory

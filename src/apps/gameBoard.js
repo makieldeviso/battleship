@@ -56,7 +56,6 @@ const createBoard = () => {
     return newBoard
 }
 
-
 class GameBoard {
     constructor (owner) {
         this.owner = owner;

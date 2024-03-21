@@ -102,7 +102,8 @@ class Ship {
     }
 
     removePlace () {
-        const gameBoard = memory.current.player.name === this.owner ? memory.current.player.gameBoard : memory.current.computer.gameBoard 
+        const currentGame = memory.getCurrentGame();
+        const gameBoard = currentGame.player.name === this.owner ? currentGame.player.gameBoard : currentGame.computer.gameBoard 
 
         // Remove the ship from the board
         this.placement.forEach(coor => {

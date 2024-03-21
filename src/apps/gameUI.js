@@ -50,7 +50,7 @@ const gameStart = function () {
   })
 
   // Save current game to memory
-  memory.current = newGame;
+  memory.setCurrentGame(newGame);
 
   // Add eventListeners to HUD buttons
   const startBtn = document.querySelector('button#start-btn');
