@@ -8,15 +8,20 @@ class TurnSwitcher {
   constructor (playerTurnScript, computerTurnScript) {
     this.playerTurnScript = playerTurnScript;
     this.computerTurnScript = computerTurnScript;
+    this.isGameOver = false;
   }
 
   switch () {
     const currentGame = memory.getCurrentGame();
+    const isGameOver = currentGame.checkGameOver();
     const lastTurn = currentGame.phase;
     const playerAttackTurn = lastTurn === 'playerAttackTurn';
   
-    // If last turn was player, switch to computer
-    if (playerAttackTurn) {
+    if ( isGameOver ) {
+      this.isGameOver = isGameOver;
+      this.startGameOverSequence();
+
+    } else if ( playerAttackTurn ) {
       currentGame.setComputerAttackTurn();
       this.computerTurnScript();
   
@@ -25,6 +30,11 @@ class TurnSwitcher {
       this.playerTurnScript();
     }
   }
+
+  startGameOverSequence () {
+    console.log(isGameOver);
+  }
+
 }
 
 
@@ -54,14 +64,19 @@ const getAttack = async function (cellArg) {
   }
 }
 
-const checkGameStats = function () {
-
-}
-
 // Helper function for playerAttackComputerPhase
 const playerAttack = async function () {
   const attackDetail = await getAttack(this);
- 
+
+  // Disable attacked cell
+  this.removeEventListener('click', playerAttack);
+
+  // Then disable player ability to attack
+  const computerGridCells = document.querySelectorAll('div#computer-grid div.cell');
+  computerGridCells.forEach(cell => {
+    if (!cell.dataset.attacked) cell.removeEventListener('click', playerAttack);
+  });
+  
   // Switch player
   turnSwitch.switch();
 };  
@@ -76,7 +91,6 @@ const playerAttackComputerPhase = function () {
 const computerAttackPlayerPhase = async function () {
   const playerGridCells = [...document.querySelectorAll('div#player-grid div.cell')]; // spread NodeList
   const unAttackedCell = playerGridCells.filter(cell => !cell.dataset.attacked);
-
   const randomIndex = generateRandomNumber(0, unAttackedCell.length - 1);
 
   // Note: getAttack returns the value of the attacked cell
@@ -98,6 +112,7 @@ const startAttack = function () {
   const currentGame = memory.getCurrentGame();
   // Remove eventListeners to player ship units/ disable moving
   removeShipEvents();
+  currentGame.endPlayerStrategy();
 
   // Save new TurnSwitcher object to turnSwitch variable defined with 'let' at upper scope
   // Save playerAttackComputerPhase and computerAttackPlayerPhase functions to turnSwitch as methods

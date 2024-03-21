@@ -27,6 +27,10 @@ class GamePlay {
     this.phase = 'playerPlaceShip';
   }
 
+  endPlayerStrategy () {
+    this.playerShipPlaced = true;
+  }
+
   setComputerAttackTurn () {
     this.phase = 'computerAttackTurn';
     return 'computer';
@@ -37,10 +41,21 @@ class GamePlay {
     return 'player';
   }
 
-  checkGameStats (shipObj) {
+  checkGameOver () {
+    const computerShipsSunk = this.computer.gameBoard.getShipsSunk();
+    const playerShipsSunk = this.player.gameBoard.getShipsSunk();
 
+    let gameOver = false;
+    if (computerShipsSunk) {
+      gameOver = `${this.player.name} Wins`;
+
+    } else if (playerShipsSunk) {
+      gameOver = `${this.computer.name} Wins`;
+    }
+
+    this.phase = gameOver;
+    return gameOver;
   }
-
 
 }
 

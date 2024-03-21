@@ -97,7 +97,10 @@ class GameBoard {
         } else {
             this.allShipsSunk = true;
         }
-        
+    }
+
+    getShipsSunk () {
+        return this.allShipsSunk;
     }
 
 }
