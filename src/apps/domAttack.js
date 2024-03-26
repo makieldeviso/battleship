@@ -1,7 +1,6 @@
 import memory from "./memoryHandler";
-import { generateRandomNumber } from "./computerScript";
+import { computerAttackPlayer, generateRandomNumber } from "./computerScript";
 import { removeShipEvents } from "./domShips";
-
 
 let turnSwitch;
 class TurnSwitcher {
@@ -15,60 +14,57 @@ class TurnSwitcher {
     const currentGame = memory.getCurrentGame();
     const isGameOver = currentGame.checkGameOver();
     const lastTurn = currentGame.phase;
-    const playerAttackTurn = lastTurn === 'playerAttackTurn';
-  
+    const isPlayerAttackTurn = lastTurn === 'playerAttackTurn';
+    const isComputerAttackTurn = lastTurn === 'computerAttackTurn';
+
     if ( isGameOver ) {
       this.isGameOver = isGameOver;
       this.startGameOverSequence();
 
-    } else if ( playerAttackTurn ) {
+    } else if ( isPlayerAttackTurn ) {
       currentGame.setComputerAttackTurn();
       this.computerTurnScript();
   
-    } else {
+    } else if ( isComputerAttackTurn ){
       currentGame.setPlayerAttackTurn();
       this.playerTurnScript();
     }
   }
 
   startGameOverSequence () {
-    console.log(isGameOver);
+    console.log(memory.getCurrentGame())
+    console.log(this.isGameOver);
   }
 
 }
 
-
-const getAttack = async function (cellArg) {
-  // If getAttack is triggered by player by clicking computer grid domCell = this
-  // If getAttack is triggered by computer by sending boardCell argument domCell = cellArg
-  const domCell = cellArg;
+const getAttack = async function (attackedCell, attackResult) {
+  const domCell = attackedCell;
   const domBoard = domCell.parentNode.parentNode;
-  const attackReceiver = domBoard.id.includes('player') ? 'player' : 'computer';
-  const currentGame = memory.getCurrentGame();
-  const attackReceiverBoard = currentGame[attackReceiver].gameBoard;
-  const cellCoordinates = { x: domCell.dataset.column, y: Number(domCell.dataset.row) };
-
-  // Execute receiveAttack to receiver gameBoard
-  const attackResult = attackReceiverBoard.receiveAttack([cellCoordinates.x, cellCoordinates.y]);
-
+  
   // Add DOM dataset to the attacked cell
   domCell.dataset.attacked = attackResult;
 
   // Disable currently open board
   const domCells = domBoard.querySelectorAll('div.cell')
   domCells.forEach(cell => cell.removeEventListener('click', getAttack));
- 
-  return {
-    result: attackResult,
-    attackedCell: attackReceiverBoard.board[`${cellCoordinates.x},${cellCoordinates.y}`]
-  }
+
+  return attackResult
 }
 
 // Helper function for playerAttackComputerPhase
-const playerAttack = async function () {
-  const attackDetail = await getAttack(this);
+const playerAttack = function () {
+  // Create coordinates array using the cell clicked by the player
+  const attackCoordinates = [this.dataset.column, Number(this.dataset.row)];
 
-  // Disable attacked cell
+  // Use the method of the Player object to send attack to opponent board
+  const { player } = memory.getCurrentGame();
+  const attackResult = player.sendAttack(attackCoordinates);
+  
+  // Indicate attack in the UI by executing getAttack function
+  getAttack(this, attackResult);
+
+  // Disable attacked cell. Cell cannot be attacked again
   this.removeEventListener('click', playerAttack);
 
   // Then disable player ability to attack
@@ -89,20 +85,23 @@ const playerAttackComputerPhase = function () {
 }
 
 const computerAttackPlayerPhase = async function () {
-  const playerGridCells = [...document.querySelectorAll('div#player-grid div.cell')]; // spread NodeList
-  const unAttackedCell = playerGridCells.filter(cell => !cell.dataset.attacked);
-  const randomIndex = generateRandomNumber(0, unAttackedCell.length - 1);
+  // Use computerScripts for computer to send attack to player board
+  const attackDetails = computerAttackPlayer();
+  const { attackCoordinates, attackResult } = attackDetails;
 
-  // Note: getAttack returns the value of the attacked cell
-  // attackedCell executes getAttack() within a delayed time
-  const attackDetail = await new Promise ((resolve) => {
-      setTimeout(() => resolve( getAttack( unAttackedCell[randomIndex] ) ), 500);
-    });
+  // Get the dom cell to be attacked by the computer
+  const playerGrid = document.querySelector('div#player-grid div.main-grid');
+  const attackedCell = playerGrid.querySelector(`div.cell[data-column = '${attackCoordinates[0]}'][data-row = '${attackCoordinates[1]}']`);
+
+  // Add UI indicator to attacked cell
+  // Note: Create a slight delay for smoother UX 
+  setTimeout(() => getAttack(attackedCell, attackResult), 500);
 
   // Save computer attack pattern to computer memory through the memoryHandler module
-  //  If attack hits, save to last hit
-  memory.setComputerLastAttack(attackDetail);
-  if (attackDetail.result === 'hit') memory.setComputerLastHit(attackDetail.attackedCell);
+  // If attack hits, save to last hit
+  memory.setComputerLastAttack(attackCoordinates);
+  
+  if (attackResult === 'hit') memory.setComputerLastHit(attackCoordinates);
   
   // Switch player
   turnSwitch.switch();
@@ -110,6 +109,7 @@ const computerAttackPlayerPhase = async function () {
 
 const startAttack = function () {
   const currentGame = memory.getCurrentGame();
+
   // Remove eventListeners to player ship units/ disable moving
   removeShipEvents();
   currentGame.endPlayerStrategy();

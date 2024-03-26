@@ -13,11 +13,15 @@ class Memory {
     return this.current
   }
 
-  setComputerLastAttack ( cellObj ) {
+  setComputerLastAttack (coordinates) {
+    const playerBoard = this.current.player.gameBoard.board;
+    const cellObj = playerBoard[`${coordinates[0]},${coordinates[1]}`];
     this.computerLastAttack = cellObj;
   }
 
-  setComputerLastHit ( cellObj ) {
+  setComputerLastHit (coordinates) {
+    const playerBoard = this.current.player.gameBoard.board;
+    const cellObj = playerBoard[`${coordinates[0]},${coordinates[1]}`];
     this.computerLastHit = cellObj;
   }
 

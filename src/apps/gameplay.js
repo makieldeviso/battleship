@@ -46,14 +46,17 @@ class GamePlay {
     const playerShipsSunk = this.player.gameBoard.getShipsSunk();
 
     let gameOver = false;
-    if (computerShipsSunk) {
+    if ( computerShipsSunk ) {
       gameOver = `${this.player.name} Wins`;
 
-    } else if (playerShipsSunk) {
+    } else if ( playerShipsSunk ) {
       gameOver = `${this.computer.name} Wins`;
     }
 
-    this.phase = gameOver;
+    if ( gameOver ) {
+      this.phase = gameOver;
+    }
+
     return gameOver;
   }
 
