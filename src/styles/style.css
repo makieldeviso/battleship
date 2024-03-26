@@ -10,22 +10,23 @@
     --common-margin: 16px;
 }
 
-/* main {
+header {
     display: flex;
     justify-content: center;
-} */
+    padding: var(--common-padding);
+    margin-bottom: var(--common-margin);
+}
 
 /* Game table (start) */
 div#game-table {
-    width: max-content;
+    width: 100%;
     margin: auto;
    
     display: grid;
-    grid-template-columns: max-content max-content max-content;
+    justify-content: center;
+    grid-template-columns: max-content minmax(max-content, 300px) max-content;
 }
 /* Game table (end) */
-
-
 
 /* Play board (start)*/
 div.play-board {
@@ -42,6 +43,7 @@ div.play-detail {
     grid-template-rows: 2fr;
     gap: var(--common-margin);
     justify-self: start;
+    justify-items: center;
     padding: var(--common-padding);
     width: 100%;
 }
@@ -122,6 +124,14 @@ div.play-grid {
     padding: var(--common-padding);
 }
 
+div.play-grid#computer-grid {
+    grid-template-areas: 
+    "main rows"
+    "columns .";
+}
+
+
+
 div.play-grid div.ship-unit {
     width: max-content;
     height: max-content;
@@ -178,12 +188,10 @@ div.play-grid div.ship-unit {
 /* Tally board (start)*/
 div.tally-board {
     display: flex;
-    width: 100%;
-    max-width: calc(9 * var(--cell-size));
+    width: 70%;
     justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
-    padding-left: var(--cell-size);
 }
 
 div.tally-board div {
@@ -210,18 +218,19 @@ div.tally-board div div.ship-cell {
 
 /* HUD (start) */
 div#hud {
-    width: 200px;
     display: grid;
     grid-template-columns: 1fr;
     justify-items: center;
-    align-items: center;
+    align-items: start;
+    padding: var(--common-padding);
 }
 
 button#start-btn {
     width: max-content;
     height: max-content;
     font-size: 1.3rem;
-    padding: var(--common-padding)
+    padding: var(--common-padding);
+    margin: 25px auto;
 }
 
 button#start-btn:hover {

@@ -8,14 +8,16 @@
   <title>Battleship</title>
 </head>
 <body>
-  <header>Battleship</header>
+  <header>
+    <h1>Battleship</h1>
+  </header>
 
     <main>
       <div id="game-table">
 
         <div id="player-board" class="play-board">
           <div id="player-detail" class="play-detail">
-            <h2 id="player-name">Player-1</h2>
+            <h2 id="player-name">Player</h2>
 
             <div id="player-tally" data-ships="5" class="tally-board">
             </div>
@@ -28,23 +30,14 @@
         </div>
 
         <div id="hud">
-          <div id="message-counter">
-            <p class="instruction" id="ins-1">Rearrange ships in the board by dragging.</p>
-            <p class="instruction" id="ins-2">Double click ships to rotate its orientation.</p>
-            <p class="instruction" id="ins-3">Press start button to finalize ship placement and start attack phase.</p>
-          </div>
-
           <button id="start-btn" value="attack" type="button">
             <span>Start</span>
           </button>
         </div>
 
-
-
-
         <div id="computer-board" class="play-board">
           <div id="computer-detail" class="play-detail">
-            <h2 id="computer-name">computer</h2>
+            <h2 id="computer-name">Computer</h2>
 
             <div id="computer-tally" data-ships="5" class="tally-board">
             </div>
@@ -57,6 +50,28 @@
             
         </div>
       </div>
+
+      <div id="options">
+        <dialog id="help-modal">
+          <div id="help-message">
+            <button type="button" class="close-help">close</button>
+            <p class="instruction" id="ins-1">Rearrange ships in the board by dragging.</p>
+            <p class="instruction" id="ins-2">Double click ships to rotate its orientation.</p>
+            <p class="instruction" id="ins-3">Press start button to finalize ship placement and start attack phase.</p>
+          </div>
+        </dialog>
+
+        <button type="button" id="help">Help</button>
+        <button type="button" id="randomize">Randomize</button>
+        <button type="button" id="forfeit">Forfeit</button>
+
+      </div>
+
+      <dialog id="gameover-dialog">
+        <p id="gameover-msg"></p>
+        <button type="button" id="play-again">Play Again</button>
+      </dialog>
+
     </main>
 
     <footer></footer>
