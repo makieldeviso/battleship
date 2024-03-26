@@ -113,7 +113,6 @@ div.play-grid {
 }
 
 div.play-grid div.ship-unit {
-    /* tally board ship units */
     width: max-content;
     height: max-content;
     display: grid;
@@ -181,6 +180,10 @@ div.tally-board div {
     flex-wrap: nowrap;
 
     border: 1px solid gray;
+}
+
+div.tally-board div.sunk {
+    background-color: red;
 }
 
 div.tally-board div div.ship-cell {

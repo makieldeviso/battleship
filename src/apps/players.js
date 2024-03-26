@@ -11,9 +11,12 @@ class Player {
     // If player name is same as this name, opponent is computer, else player
     const opponent = player.name === this.name ? computer : player;
 
-    const attackResult = opponent.gameBoard.receiveAttack(coordinates);
+    const attackDetails = opponent.gameBoard.receiveAttack(coordinates);
+    const {attackResult, attackedCell} = attackDetails;
 
-    return attackResult
+    // Note: destructure to remove repetitive call. i.e attackDetails.attackResult
+    // Attack Details contains attackResult and attackedCell
+    return {attackResult, attackedCell}
   }
 }
 

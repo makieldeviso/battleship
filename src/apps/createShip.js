@@ -18,6 +18,8 @@ class Ship {
         if (this.length === this.hitPoints) {
             this.sunk = true;
         }
+
+        return this.sunk;
     }
 
     setPlace (board, coordinates) {

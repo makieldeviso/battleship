@@ -67,25 +67,25 @@ class GameBoard {
     receiveAttack (coordinates) {
         const gameBoard = this.board;
         const cellName = `${coordinates[0]},${coordinates[1]}`;
-        const cell = gameBoard[cellName];
+        const attackedCell = gameBoard[cellName];
 
-        let result = 'missed';
+        let attackResult = 'missed';
 
-        if (cell.occupied) {
-            result = 'hit';
+        if (attackedCell.occupied) {
+           attackResult = 'hit';
 
             // Add hits to the ship that occupies given coordinate
-            const shipOccupant = cell.occupied.ship;
+            const shipOccupant = attackedCell.occupied.ship;
             shipOccupant.hitPoints += 1; // Adds hitPoints to ship
             shipOccupant.isSunk(); // Check current status, then change ship object property if sunk
         }
 
         // Logs this cell if it has been attacked
-        cell.attacked = result;
+        attackedCell.attacked = attackResult;
 
         // Check if all ships has sunk
         this.checkShipsSunk();
-        return result;
+        return {attackResult, attackedCell}
     }
 
     checkShipsSunk () {

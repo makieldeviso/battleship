@@ -89,9 +89,10 @@ const computerAttackPlayer = function () {
 
   const attackCoordinates = [`${randomCell.column}`, randomCell.row];
   
-  const attackResult = computer.sendAttack(attackCoordinates);
+  const attackDetails = computer.sendAttack(attackCoordinates);
+  const {attackResult, attackedCell} = attackDetails
 
-  return {attackCoordinates, attackResult}
+  return {attackCoordinates, attackResult, attackedCell}
 }
 
 

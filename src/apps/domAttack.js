@@ -38,12 +38,32 @@ class TurnSwitcher {
 
 }
 
-const getAttack = async function (attackedCell, attackResult) {
-  const domCell = attackedCell;
+const checkShipUnitSank = function (shipObj) {
+  const shipSunk = shipObj.sunk;
+  
+  if (shipSunk) {
+    const currentGame = memory.getCurrentGame();
+    const tallySelector = currentGame.player.name === shipObj.owner ? 'player-tally' : 'computer-tally';
+    const tallyBoard = document.querySelector(`div#${tallySelector}`);
+    const shipTally = tallyBoard.querySelector(`div[title='${shipObj.name}']`);
+
+    shipTally.classList.add('sunk');
+  }
+
+}
+
+const getAttack = async function (attackedDomCell, attackResult, attackedCell) {
+  const domCell = attackedDomCell;
   const domBoard = domCell.parentNode.parentNode;
   
   // Add DOM dataset to the attacked cell
   domCell.dataset.attacked = attackResult;
+
+  // Add indicator if hit ship has sunk
+  if (attackResult === 'hit') {
+    const shipObj = attackedCell.occupied.ship;
+    checkShipUnitSank(shipObj);
+  }
 
   // Disable currently open board
   const domCells = domBoard.querySelectorAll('div.cell')
@@ -59,10 +79,11 @@ const playerAttack = function () {
 
   // Use the method of the Player object to send attack to opponent board
   const { player } = memory.getCurrentGame();
-  const attackResult = player.sendAttack(attackCoordinates);
+  const attackDetails = player.sendAttack(attackCoordinates);
+  const {attackResult, attackedCell} = attackDetails;
   
   // Indicate attack in the UI by executing getAttack function
-  getAttack(this, attackResult);
+  getAttack(this, attackResult, attackedCell);
 
   // Disable attacked cell. Cell cannot be attacked again
   this.removeEventListener('click', playerAttack);
@@ -87,15 +108,15 @@ const playerAttackComputerPhase = function () {
 const computerAttackPlayerPhase = async function () {
   // Use computerScripts for computer to send attack to player board
   const attackDetails = computerAttackPlayer();
-  const { attackCoordinates, attackResult } = attackDetails;
+  const { attackCoordinates, attackResult, attackedCell } = attackDetails;
 
   // Get the dom cell to be attacked by the computer
   const playerGrid = document.querySelector('div#player-grid div.main-grid');
-  const attackedCell = playerGrid.querySelector(`div.cell[data-column = '${attackCoordinates[0]}'][data-row = '${attackCoordinates[1]}']`);
+  const attackedDomCell = playerGrid.querySelector(`div.cell[data-column = '${attackCoordinates[0]}'][data-row = '${attackCoordinates[1]}']`);
 
   // Add UI indicator to attacked cell
   // Note: Create a slight delay for smoother UX 
-  setTimeout(() => getAttack(attackedCell, attackResult), 500);
+  setTimeout(() => getAttack(attackedDomCell, attackResult, attackedCell), 500);
 
   // Save computer attack pattern to computer memory through the memoryHandler module
   // If attack hits, save to last hit
