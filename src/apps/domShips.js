@@ -382,6 +382,7 @@ const rotateShipUnit = function (event) {
 // Event listener function (end)
 
 // Creates the shipUnit placed on the DOM
+// Note: playerName parameter does not pertain to name of player. Instead only defined as 'player' or 'computer
 const createShipUnit = function (shipObj, playerName) {
   const shipUnit = createDomShip(shipObj);
   shipUnit.setAttribute('id', `${playerName}-${shipNameFormat(shipObj)}-unit`);
@@ -442,6 +443,7 @@ const createShipUnit = function (shipObj, playerName) {
   shipUnit.style.left = `${headCell.offsetLeft}px`;
   // Ship placement on DOM (end)
 
+  // Adds eventListeners to shipUnit made
   if (playerName === 'player') {
     shipUnit.addEventListener('mousedown', selectShipUnit);
     shipUnit.addEventListener('dblclick', rotateShipUnit);
@@ -461,5 +463,4 @@ const removeShipEvents = function () {
   })
 }
 
-
-  export {showShipPlacement, createShipTally, createShipUnit, removeShipEvents}
+export {showShipPlacement, createShipTally, createShipUnit, removeShipEvents}

@@ -3,7 +3,7 @@ import memory from "./memoryHandler";
 
 // UI Scripts
 import { createGridInBoard } from "./domGridCreator";
-import { showShipPlacement, createShipTally, createShipUnit } from "./domShips";
+import { showShipPlacement, createShipTally, createShipUnit, addResizeShipMovement } from "./domShips";
 import startAttack from "./domAttack";
 
 const domPlayerBoard = document.querySelector('div#player-grid');

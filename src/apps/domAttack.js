@@ -48,8 +48,7 @@ const checkShipUnitSank = function (shipObj) {
     const shipTally = tallyBoard.querySelector(`div[title='${shipObj.name}']`);
 
     shipTally.classList.add('sunk');
-  }
-
+  } 
 }
 
 const getAttack = async function (attackedDomCell, attackResult, attackedCell) {
