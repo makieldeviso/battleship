@@ -51,20 +51,52 @@ const checkShipUnitSank = function (shipObj) {
   } 
 }
 
+const animateAttack = async function (domCell, domBoard, attackResult) {
+  const explosion = new Image();
+  explosion.src = `../assets/${attackResult}.gif`;
+  explosion.setAttribute('id', 'explosion');
+  
+  // Note: styling at CSS file. This script position the image at absolute offset
+  explosion.style.left = `${domCell.offsetLeft - domCell.clientWidth/2}px`;
+  explosion.style.top = `${domCell.offsetTop - domCell.clientHeight/2}px`;
+  
+  // Append image at domBoard
+  domBoard.appendChild(explosion);
+
+  // Await animation to finish at require time
+  // Note: animation does not loop
+  const animatedExplosion = await new Promise((resolve) => {
+    setTimeout(() => {
+      resolve (explosion);
+    }, 500);
+  }) 
+
+  // Reassign src to restart animation at frame 1 on next instance
+  // Remove the explosion from the DOM
+  animatedExplosion.src = '';
+  domBoard.removeChild(animatedExplosion);
+}
+
+
 const getAttack = async function (attackedDomCell, attackResult, attackedCell) {
   const domCell = attackedDomCell;
   const domBoard = domCell.parentNode.parentNode;
-  
-  // Add DOM dataset to the attacked cell
-  domCell.dataset.attacked = attackResult;
 
   // Add indicator if hit ship has sunk
+  // Note: indicator syncs with attack animation
   if (attackResult === 'hit') {
     const shipObj = attackedCell.occupied.ship;
     checkShipUnitSank(shipObj);
   }
+  
+  await animateAttack(domCell, domBoard, attackResult);
+
+  // Add DOM dataset to the attacked cell
+  // Note: Wait for attack animation to end
+  domCell.dataset.attacked = attackResult;
 
   // Disable currently open board
+  // Note: Wait for attack animation to end
   const domCells = domBoard.querySelectorAll('div.cell')
   domCells.forEach(cell => cell.removeEventListener('click', getAttack));
 
@@ -86,11 +118,15 @@ const playerAttack = function () {
 
   // Disable attacked cell. Cell cannot be attacked again
   this.removeEventListener('click', playerAttack);
+  this.classList.remove('open');
 
   // Then disable player ability to attack
   const computerGridCells = document.querySelectorAll('div#computer-grid div.cell');
   computerGridCells.forEach(cell => {
-    if (!cell.dataset.attacked) cell.removeEventListener('click', playerAttack);
+    if (!cell.dataset.attacked) {
+      cell.removeEventListener('click', playerAttack);
+      cell.classList.remove('open');
+    }
   });
   
   // Switch player
@@ -100,7 +136,10 @@ const playerAttack = function () {
 const playerAttackComputerPhase = function () {
   const computerGridCells = document.querySelectorAll('div#computer-grid div.cell');
   computerGridCells.forEach(cell => {
-    if (!cell.dataset.attacked) cell.addEventListener('click', playerAttack);
+    if (!cell.dataset.attacked) {
+      cell.addEventListener('click', playerAttack);
+      cell.classList.add('open');
+    }
   });
 }
 
@@ -115,7 +154,9 @@ const computerAttackPlayerPhase = async function () {
 
   // Add UI indicator to attacked cell
   // Note: Create a slight delay for smoother UX 
-  setTimeout(() => getAttack(attackedDomCell, attackResult, attackedCell), 500);
+  await new Promise((resolve) => {
+    setTimeout(() => resolve (getAttack(attackedDomCell, attackResult, attackedCell)), 500);
+  });
 
   // Save computer attack pattern to computer memory through the memoryHandler module
   // If attack hits, save to last hit

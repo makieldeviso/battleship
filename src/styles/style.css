@@ -1,52 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 :root {
-    --cell-size: 40px;
-    --common-padding: 8px;
-    --common-margin: 16px;
+  --cell-size: 32px;
+  --common-padding: 8px;
+  --common-margin: 16px;
+  --title-font: "Libre Baskerville", serif;
+
+  --base-blue: #207DFF;
+  --light-blue: #95e9f9;
+  --base-green: #85EF47;
+  --dark-green: #00BD56;
+  --base-yellow: #F9FD50;
+  --dark-yellow: #F9D923;
+  --base-red: #EB5353;
+  --dark-gray: #27374D;
+  --base-gray: #526D82;
+  --light-gray: #9DB2BF;
+  --off-white: #DDE6ED;
+  --cream: #EEE0C9;
 }
 
 header {
-    display: flex;
-    justify-content: center;
-    padding: var(--common-padding);
-    margin-bottom: var(--common-margin);
+  display: flex;
+  justify-content: center;
+  padding: var(--common-padding);
+  margin-bottom: var(--common-margin);
+}
+
+h1#title {
+  font-family: var(--title-font);
+  font-weight: bold;
+  color: white;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+
+    height: 100%;
+    width: 100%;    
+
+    background-image: url('../assets/background.jpg');
+    background-position: center;
+    background-size: cover;
+    filter: brightness(0.7);
+}
+
+p {
+    color: white;
 }
 
 /* Game table (start) */
 div#game-table {
-    width: 100%;
-    margin: auto;
-   
-    display: grid;
-    justify-content: center;
-    grid-template-columns: max-content minmax(max-content, 300px) max-content;
+  position: relative;
+  width: max-content;
+  margin: auto;
+  gap: 10vw;
+  padding: calc(var(--common-padding) * 2) 0;
+  
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(2, max-content);
 }
 /* Game table (end) */
 
 /* Play board (start)*/
 div.play-board {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: max-content;
     grid-template-rows: max-content 1fr;
-    gap: var(--common-margin);
+    gap: calc(var(--common-margin) * 0.5);
     width: max-content;
 }
 
-div.play-detail {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 2fr;
-    gap: var(--common-margin);
-    justify-self: start;
-    justify-items: center;
-    padding: var(--common-padding);
-    width: 100%;
+div.play-board#computer-board div#computer-grid {
+  justify-self: end;
 }
+
+div.play-detail {
+  width: max-content;
+  display: grid;
+  grid-template-rows: repeat(2, max-content);
+  justify-items: start;
+  grid-template-columns: repeat(2, max-content);
+  padding: var(--common-padding) calc(var(--common-padding) * 2);
+  gap: var(--common-padding);
+  border: 1px solid white;
+  border-radius: 3px;
+  box-shadow: inset 0 0 5px 1px rgba(149, 233, 249, 0.5);
+  background:  linear-gradient(transparent 5%, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2) );
+}
+
+div.play-detail#player-detail {
+  justify-self: end;
+  margin: 0 var(--common-padding) 0 0;
+  grid-template-areas: 
+  "name flag"
+  "tally .";
+}
+
+div.play-detail#computer-detail {
+  justify-self: start;
+  margin: 0 0 0 var(--common-padding); 
+  grid-template-areas: 
+  "flag name"
+  ". tally";
+}
+
+div#computer-flag, button#surrender-flag {
+  grid-area: flag;
+  width: 40px;
+  height: 40px;
+  justify-self: center;
+  padding: var(--common-padding);
+  border-radius: 5px;
+  border: 1px solid var(--dark-gray);
+  box-shadow: inset 0 0 5px 1px #526D82;
+}
+
+button#surrender-flag:hover {
+  cursor: pointer;
+}
+
+div.play-detail h2, div.tally-board {
+  width: 240px;
+  background: linear-gradient(0.25turn, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8) );
+  border-radius: 5px;
+  border: 1px solid var(--base-blue);
+  box-shadow: inset 0 0 10px 1px rgba(149, 233, 249, 0.5);
+}
+
+div#player-flag {
+  background-color: var(--base-blue);
+}
+div#computer-flag {
+  background-color: rgba(255, 0, 0, 0.5);
+}
+
+div.play-detail h2 {
+  grid-area: name;
+  color: var(--light-blue);
+  font-family: var(--title-font);
+  font-size: 1rem;
+  height: 40px;
+  min-width: max-content;
+  text-align: center;
+  padding: calc(var(--common-padding) * 0.5);
+  padding: var(--common-padding);
+}
+
+/* Tally board (start)*/
+div.tally-board {
+  grid-area: tally;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: var(--common-padding);
+}
+
+div.tally-board > div {
+  /* tally board ship units */
+  width: max-content;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+div.tally-board div.carrier {
+background-image: url(../assets/carrier-tally.png);
+background-size: 95% 95%;
+}
+
+div.tally-board div.carrier.sunk {
+  background-image: url(../assets/carrier-sunk.png);
+}
+
+div.tally-board div.battleship {
+background-image: url(../assets/battleship-tally.png);
+}
+
+div.tally-board div.battleship.sunk {
+  background-image: url(../assets/battleship-sunk.png);
+}
+
+div.tally-board div.destroyer {
+  background-image: url(../assets/destroyer-tally.png);
+}
+
+div.tally-board div.destroyer.sunk {
+  background-image: url(../assets/destroyer-sunk.png);
+}
+
+div.tally-board div.submarine {
+  background-image: url(../assets/submarine-tally.png);
+}
+
+div.tally-board div.submarine.sunk {
+  background-image: url(../assets/submarine-sunk.png);
+}
+
+div.tally-board div.patrol-boat {
+  background-image: url(../assets/patrol-boat-tally.png);
+}
+
+div.tally-board div.patrol-boat.sunk {
+  background-image: url(../assets/patrol-boat-sunk.png);
+}
+
+
+div.tally-board div div.ship-cell {
+  width: calc(var(--cell-size) * 0.6);
+  height: calc(var(--cell-size) * 0.6);
+  background-color: rgba(32, 125, 255, 0.1);
+  z-index: -1;
+}
+
+/* Tally board (end)*/
+
+
+
 
 /* Play board (end)*/
 
@@ -58,37 +244,76 @@ div.main-grid {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
-
+    border: 3px solid rgba(149, 233, 249, 0.5);
 }
 
 div.main-grid div.cell {
     width: var(--cell-size);
     height: var(--cell-size);
-    border: 1px solid black;
+    border: 1px solid rgba(149, 233, 249, 0.2);
+}
+
+
+@keyframes crosshair {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+div#computer-grid div.open:hover:not([data-attacked]) {
+  background-image: url(../assets/crosshair.svg);
+  border: 1px solid var(--base-green);
+  border-radius: 50%;
+  cursor: pointer;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: rgba(0, 189, 86, 0.3);
+  animation: crosshair 3s linear infinite;
 }
 
 div.main-grid div.cell.hover {
     /* Note: hover is class added from script */
-    background-color: rgba(0, 128, 0, 0.3);
-    border: 1px solid green;
+    background-color: rgba(133, 239, 71, 0.5);
+    border: 1px solid var(--base-green);
 }
 
 div.main-grid div.cell.hover.invalid {
     /* Note: hover is class added from script */
-    background-color: rgba(255, 0, 0, 0.3);
+    background-color: rgba(235, 83, 83, 0.5);
     border: 1px solid red;
 }
 
 div.main-grid div.cell.occupied {
-    background-color: aquamarine;
+    background-color: rgb(0, 200, 255, 0.5)
 }
 
+img#explosion {
+  position: absolute;
+  z-index: 3;
+  width: calc(var(--cell-size) * 2);
+  height: calc(var(--cell-size) * 2);
+  object-fit: cover;
+  object-position: center;
+}
+
+div.main-grid div.cell[data-attacked] {
+  background-image: url(../assets/attacked.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-color 0.1s ease-in-out;
+}
 div.main-grid div.cell[data-attacked="missed"] {
-    background-color: yellow;
+  background-color: rgba(149, 233, 249, 0.5);
 }
 
 div.main-grid div.cell[data-attacked="hit"] {
-    background-color: orangered;
+  background-color: rgba(255, 0, 0, 0.5);
 }
 
 div.column-marker div, div.row-marker div {
@@ -130,8 +355,6 @@ div.play-grid#computer-grid {
     "columns .";
 }
 
-
-
 div.play-grid div.ship-unit {
     width: max-content;
     height: max-content;
@@ -139,8 +362,9 @@ div.play-grid div.ship-unit {
     grid-template-columns: 1fr; /* this changes with JS  */
     grid-template-columns: repeat(5, 1fr); /* this changes with JS  */
 
-    border: 1px solid red;
-    background-color: rgba(255, 0, 0, 0.3);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 
     position: absolute;
     z-index: 2;
@@ -156,10 +380,23 @@ div.play-grid div.ship-unit div.ship-cell {
 }
 
 div.play-grid div.ship-unit.selected {
-   border: 2px solid blue;
-   z-index: 5;
+  border-radius: 5px;
+  border: 3px solid var(--light-blue);
+  z-index: 5;
+  filter: opacity(0.8);
 }
 
+div.play-grid div.ship-unit.carrier[data-dir="up"],
+div.play-grid div.ship-unit.carrier[data-dir="down"] {
+    background-size: 90% 95%;
+}
+
+div.play-grid div.ship-unit.carrier[data-dir="left"],
+div.play-grid div.ship-unit.carrier[data-dir="right"] {
+    background-size: 95% 90%;
+}
+
+/* carrier (start) */
 div.play-grid div.ship-unit.carrier[data-dir="up"] {
     background-image: url("../assets/carrier-up.png");
 }
@@ -175,66 +412,183 @@ div.play-grid div.ship-unit.carrier[data-dir="left"] {
 div.play-grid div.ship-unit.carrier[data-dir="right"] {
     background-image: url("../assets/carrier-right.png");
 }
+/* carrier (end) */
 
-div.play-grid div.ship-unit {
-    background-size: 95% 95%;
-    background-repeat: no-repeat;
-    background-position: center;
+/* battleship (start) */
+div.play-grid div.ship-unit.battleship[data-dir="up"] {
+    background-image: url("../assets/battleship-up.png");
 }
 
+div.play-grid div.ship-unit.battleship[data-dir="down"] {
+    background-image: url("../assets/battleship-down.png");
+}
+
+div.play-grid div.ship-unit.battleship[data-dir="left"] {
+    background-image: url("../assets/battleship-left.png");
+}
+
+div.play-grid div.ship-unit.battleship[data-dir="right"] {
+    background-image: url("../assets/battleship-right.png");
+}
+/* battleship (start) */
+
+/* destroyer (start) */
+div.play-grid div.ship-unit.destroyer[data-dir="up"] {
+    background-image: url("../assets/destroyer-up.png");
+}
+
+div.play-grid div.ship-unit.destroyer[data-dir="down"] {
+    background-image: url("../assets/destroyer-down.png");
+}
+
+div.play-grid div.ship-unit.destroyer[data-dir="left"] {
+    background-image: url("../assets/destroyer-left.png");
+}
+
+div.play-grid div.ship-unit.destroyer[data-dir="right"] {
+    background-image: url("../assets/destroyer-right.png");
+}
+/* destroyer (end) */
+
+/* submarine (start) */
+div.play-grid div.ship-unit.submarine[data-dir="up"] {
+    background-image: url("../assets/submarine-up.png");
+}
+
+div.play-grid div.ship-unit.submarine[data-dir="down"] {
+    background-image: url("../assets/submarine-down.png");
+}
+
+div.play-grid div.ship-unit.submarine[data-dir="left"] {
+    background-image: url("../assets/submarine-left.png");
+}
+
+div.play-grid div.ship-unit.submarine[data-dir="right"] {
+    background-image: url("../assets/submarine-right.png");
+}
+/* submarine (end) */
+
+/* patrol-boat (start) */
+div.play-grid div.ship-unit.patrol-boat[data-dir="up"] {
+    background-image: url("../assets/patrol-boat-up.png");
+}
+
+div.play-grid div.ship-unit.patrol-boat[data-dir="down"] {
+    background-image: url("../assets/patrol-boat-down.png");
+}
+
+div.play-grid div.ship-unit.patrol-boat[data-dir="left"] {
+    background-image: url("../assets/patrol-boat-left.png");
+}
+
+div.play-grid div.ship-unit.patrol-boat[data-dir="right"] {
+    background-image: url("../assets/patrol-boat-right.png");
+}
+/* patrol-boat (end) */
 
 /* Main play board grid (end) */
 
-/* Tally board (start)*/
-div.tally-board {
-    display: flex;
-    width: 70%;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
 
-div.tally-board div {
-    /* tally board ship units */
-    width: max-content;
-    display: flex;
-    justify-content: center;
-    flex-wrap: nowrap;
-
-    border: 1px solid gray;
-}
-
-div.tally-board div.sunk {
-    background-color: red;
-}
-
-div.tally-board div div.ship-cell {
-    width: calc(var(--cell-size) / 2);
-    height: calc(var(--cell-size) / 2);
-    border: 1px solid green;
-}
-
-/* Tally board (end)*/
 
 /* HUD (start) */
 div#hud {
-    display: grid;
-    grid-template-columns: 1fr;
-    justify-items: center;
-    align-items: start;
-    padding: var(--common-padding);
+  width: calc(12 * var(--cell-size));
+  height: 100%;
+  padding: var(--common-padding);
+  border: 1px solid var(--light-blue);
+  border-radius: 5px;
+  position: absolute;
+  top: 0; 
+  right: 0;
+  box-shadow: inset 0 0 10px 1px rgba(149, 233, 249, 0.8);
+  background-color: rgba(82, 109, 130, 0.9);
+
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: 
+   "help randomize"
+   "start start";
 }
 
 button#start-btn {
-    width: max-content;
-    height: max-content;
-    font-size: 1.3rem;
-    padding: var(--common-padding);
-    margin: 25px auto;
+  grid-area: start;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--common-padding);
+  width: max-content;
+  height: max-content;
+  font-size: 2rem;
+  padding: var(--common-padding);
+  background-color: var(--dark-gray);
+  border: 1px solid var(--light-blue);
+  border-radius: 5px;
+  transition: box-shadow 0.2s ease-in-out, filter 0.2s ease-in-out;
+}
+
+button#start-btn span {
+  color: var(--light-blue);
+  padding: var(--common-padding);
 }
 
 button#start-btn:hover {
     cursor: pointer;
+    box-shadow: inset 0 0 3px 1px #95e9f9;
+    filter: brightness(1.2);
+}
+
+button#start-btn:hover svg {
+  filter: drop-shadow(0px 0px 3px rgba(149, 233, 249, 0.8));
+}
+
+button#start-btn:active{
+  transform: scale(0.9);
+}
+
+button#help {
+  grid-area: help;
+}
+
+button#randomize {
+  grid-area: randomize;
+}
+
+button.option-btn {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: max-content 1fr;
+  justify-items: center;
+  align-items: center;
+  font-size: 1rem;
+  gap: var(--common-padding);
+  padding: var(--common-padding);
+  border-radius: 5px;
+  width: 104px;
+  color: var(--light-blue);
+  background-color: var(--dark-gray);
+  border: 1px solid var(--light-blue);
+  filter: brightness(0.8);
+  transition: filter 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+button.option-btn:hover {
+  cursor: pointer;
+  box-shadow: inset 0 0 3px 1px rgba(149, 233, 249, 0.8);
+  filter: brightness(1.2);
+}
+
+button.option-btn:hover svg {
+  filter: drop-shadow(0px 0px 3px rgba(149, 233, 249, 0.8));
+}
+
+button.option-btn svg, button#start-btn svg {
+  width: calc(var(--cell-size) * 1.5);
+  height: calc(var(--cell-size) * 1.5);
+  fill: var(--light-blue);
+  transition: filter 0.2s ease-in-out;
 }
 
 /* HUD (end) */
