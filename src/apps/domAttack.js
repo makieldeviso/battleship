@@ -1,6 +1,7 @@
 import memory from "./memoryHandler";
 import { computerAttackPlayer, generateRandomNumber } from "./computerScript";
 import { removeShipEvents } from "./domShips";
+import { addMenuEvents, slideShowHud } from "./domMenu";
 
 let turnSwitch;
 class TurnSwitcher {
@@ -168,6 +169,10 @@ const computerAttackPlayerPhase = async function () {
   turnSwitch.switch();
 }
 
+const surrenderGame = function () {
+  turnSwitch.showHud();
+}
+
 const startAttack = function () {
   const currentGame = memory.getCurrentGame();
 
@@ -190,8 +195,18 @@ const startAttack = function () {
     turnSwitch.computerTurnScript();
   }
   
+  // Hide Hud menu on attack phase start
+  slideShowHud();
+
+  // Add eventListener to menu button
+  addMenuEvents();
+
+  // Add eventListener to Surrender Button
+  // const surrenderBtn = document.querySelector('button#surrender');
+  // surrenderBtn.addEventListener('click', surrenderGame);
+
   // Remove eventListener to start button
-  this.removeEventListener('click',  startAttack);
+  // this.removeEventListener('click',  startAttack);
 }
 
 export default startAttack

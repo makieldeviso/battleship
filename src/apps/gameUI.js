@@ -5,6 +5,7 @@ import memory from "./memoryHandler";
 import { createGridInBoard } from "./domGridCreator";
 import { showShipPlacement, createShipTally, createShipUnit, addResizeShipMovement } from "./domShips";
 import startAttack from "./domAttack";
+import { slideShowHud, showHelp } from "./domMenu";
 
 const domPlayerBoard = document.querySelector('div#player-grid');
 const domComputerBoard = document.querySelector('div#computer-grid');
@@ -55,6 +56,10 @@ const gameStart = function () {
   // Add eventListeners to HUD buttons
   const startBtn = document.querySelector('button#start-btn');
   startBtn.addEventListener('click', startAttack);
+
+  const helpBtn = document.querySelector('button#help');
+  helpBtn.addEventListener('click', showHelp);
+
 }
 
 export { gameStart }
