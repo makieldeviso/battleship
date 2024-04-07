@@ -13,6 +13,11 @@ class Memory {
     return this.current
   }
 
+  getPlayerShips () {
+    const currentGame = this.getCurrentGame();
+    return currentGame.player.gameBoard.ships;
+  }
+
   setComputerLastAttack (coordinates) {
     const playerBoard = this.current.player.gameBoard.board;
     const cellObj = playerBoard[`${coordinates[0]},${coordinates[1]}`];

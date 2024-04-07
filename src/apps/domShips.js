@@ -451,6 +451,16 @@ const createShipUnit = function (shipObj, playerName) {
   }
 }
 
+// Clear the board
+const clearPlayerBoard = function () {
+  const playerGrid = document.querySelector('div#player-grid');
+  const playerShips = document.querySelectorAll('div.ship-unit');
+  const occupiedCells = playerGrid.querySelectorAll('div.cell.occupied');
+  playerShips.forEach(ship => playerGrid.removeChild(ship));
+  occupiedCells.forEach(cell => cell.classList.remove('occupied'));
+}
+
+// Remove eventListeners to ships on start
 const removeShipEvents = function () {
   // Finalize ship strategy phase/ ship movement
   // Removes event listeners to ships
@@ -463,4 +473,4 @@ const removeShipEvents = function () {
   })
 }
 
-export {showShipPlacement, createShipTally, createShipUnit, removeShipEvents}
+export {showShipPlacement, createShipTally, createShipUnit, removeShipEvents, clearPlayerBoard}

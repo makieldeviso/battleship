@@ -1,8 +1,7 @@
 // Scripts
-import { computerPlaceShips, generateRandomNumber } from "./computerScript";
+import { computerPlaceShips } from "./computerScript";
 import GameBoard from "./gameBoard";
 import Player from "./players";
-import Ship from "./createShip";
 
 class GamePlay {
   constructor() {

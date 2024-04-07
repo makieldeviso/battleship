@@ -3,9 +3,9 @@ import memory from "./memoryHandler";
 
 // UI Scripts
 import { createGridInBoard } from "./domGridCreator";
-import { showShipPlacement, createShipTally, createShipUnit, addResizeShipMovement } from "./domShips";
+import { showShipPlacement, createShipTally, createShipUnit } from "./domShips";
 import startAttack from "./domAttack";
-import { slideShowHud, showHelp } from "./domMenu";
+import { showStratScreen, showHelpScreen, returnToMainDisplay, randomizeShipPlacement } from "./domMenu";
 
 const domPlayerBoard = document.querySelector('div#player-grid');
 const domComputerBoard = document.querySelector('div#computer-grid');
@@ -14,6 +14,8 @@ const gameStart = function () {
   // create a GamePlay object then execute start method
   const newGame = new GamePlay();
   newGame.start();
+   // Save current game to memory
+   memory.setCurrentGame(newGame);
   
   // Create grid for the DOM using data from newGame
   createGridInBoard(newGame.computer, domComputerBoard);
@@ -41,24 +43,28 @@ const gameStart = function () {
   })
 
   // !!!!!!!!!! temp execution
-  const computerBoard = newGame.computer.gameBoard.board;
-  Object.keys(computerBoard).forEach(key => {
-    if (computerBoard[key].occupied) {
-      const {column, row} = computerBoard[key];
-      // Note: showShipPlacement requires array of coordinates as argument
-      showShipPlacement([[column, row]], domComputerBoard )
-    }
-  })
+  // const computerBoard = newGame.computer.gameBoard.board;
+  // Object.keys(computerBoard).forEach(key => {
+  //   if (computerBoard[key].occupied) {
+  //     const {column, row} = computerBoard[key];
+  //     // Note: showShipPlacement requires array of coordinates as argument
+  //     showShipPlacement([[column, row]], domComputerBoard )
+  //   }
+  // })
 
-  // Save current game to memory
-  memory.setCurrentGame(newGame);
+  // Open initial content on screen (strategy phase)
+  showStratScreen()
 
   // Add eventListeners to HUD buttons
   const startBtn = document.querySelector('button#start-btn');
-  startBtn.addEventListener('click', startAttack);
-
   const helpBtn = document.querySelector('button#help');
-  helpBtn.addEventListener('click', showHelp);
+  const closeBtn = document.querySelector('button#close-btn');
+  const randomBtn = document.querySelector('button#random');
+  
+  startBtn.addEventListener('click', startAttack);
+  helpBtn.addEventListener('click', showHelpScreen);
+  closeBtn.addEventListener('click', returnToMainDisplay);
+  randomBtn.addEventListener('click', randomizeShipPlacement);
 
 }
 

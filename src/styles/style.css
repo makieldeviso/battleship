@@ -42,6 +42,7 @@ h1#title {
 
 main {
   height: 80vh;
+  min-height: max-content;
 }
 
 body::before {
@@ -532,7 +533,7 @@ div.play-grid div.ship-unit.patrol-boat[data-dir="right"] {
 /* HUD (start) */
 div#hud.shown {
   width: calc(12 * var(--cell-size));
-  height: 600px;
+  height: max-content;
   border: 1px solid var(--light-blue);
   border-radius: 5px;
   position: absolute;
@@ -558,15 +559,15 @@ div#hud.hidden {
 div#hud div#hud-container {
   width: 100%;
   height: 100%;
-  padding: var(--common-padding);
+  padding: calc(var(--common-padding) * 2) var(--common-padding);
   box-shadow: inset 0 0 10px 1px rgba(149, 233, 249, 0.8);
   background-color: rgba(82, 109, 130, 0.8);
 
   display: grid;
   justify-items: center;
   align-items: center;
-  grid-template-columns: 40% 60%;
-  grid-template-rows: max-content max-content max-content 1fr 1fr;
+  grid-template-columns: 40% 1fr;
+  grid-auto-rows: max-content;
   gap: var(--common-padding);
   grid-template-areas:
     "back-hud ." 
@@ -576,7 +577,7 @@ div#hud div#hud-container {
     ". start";
 }
 
-div#help-screen {
+div#hud-screen {
   grid-area: screen;
   width: 330px;
   height: 230px;
@@ -587,7 +588,8 @@ div#help-screen {
   box-shadow: 0 0 10px 4px #27374D;
 }
 
-div#help-screen div#help-container {
+div#hud-screen div#screen-container {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr;
   padding: var(--common-padding);
@@ -600,50 +602,98 @@ div#help-screen div#help-container {
   box-shadow: inset 0 0 10px 2px rgba(149, 233, 249, 0.7);
 }
 
-div#help-screen div#help-container.closed {
-  background: radial-gradient(#32445d 20%, #27374D 40%, black);
-}
-
-div#help-message {
+div#hud-screen div.content {
   height: 100%;
   width: 100%;
-  border-radius: 0;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
   margin: auto;
+
+  padding: var(--common-padding);
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  filter: opacity(1);
+  border-radius: 0;
   background-color: rgba(149, 233, 249, 0);
   transition: 
     height 0.2s ease-in-out, 
-    width 0.2s ease-in-out, 
+    width 0.2s ease-in-out,
+    top 0.2s ease-in-out,
+    left 0.2s ease-in-out, 
+    filter 0.2s ease-in-out,
     background-color 0.2s ease-in-out,  
     border-radius 0.2s ease-in-out;
 }
 
-div#help-message.closed {
+div#hud-screen div.content.closed {
   height: 0;
   width: 0;
   border-radius: 100%;
   background-color: #95e9f9;
+  left: 50%;
+  top: 50%;
+  filter: opacity(0);
 }
 
-div#help-screen p.instruction {
+div#hud-screen p,
+div#hud-screen h3 {
   font-family: var(--screen-font);
   font-size: 1rem;
-  display: inline-block;
+  width: 100%;
+
   margin-left: 1rem;
-  text-align: start;
   text-indent: -1rem;
+  text-align: start;
+  
+  display: inline-block;
   color: var(--light-blue);
   text-shadow: 0 0 3px rgba(149, 233, 249, 0.8);
   margin-bottom: 3px;
+}
+
+div#hud-screen h3 {
+  font-size: 1.3rem;
+  text-align: center;
+  text-indent: 0;
+
+  width: 100%;
+  margin: 0 0 var(--common-margin) 0;
+}
+
+div#hud-screen div#strat-screen,
+div#hud-screen div#attack-screen {
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  gap: 8px;
+}
+
+div#hud-screen div#strat-screen {
+  grid-template-rows: max-content 1fr repeat(2, max-content);
+}
+
+div#hud-screen div#attack-screen {
+  grid-auto-rows: max-content;
+}
+
+div#strat-screen p,
+div#attack-screen p {
+  text-align: center;
+  text-indent: 0;
+  margin: 0;
 }
 
 div#choice-btns {
   grid-area: choice;
   width: 100%;
   height: max-content;
+  margin: calc(var(--common-margin) * 0.5) 0;
 
   display: grid;
   grid-template-columns: 25% 25%;
@@ -653,13 +703,13 @@ div#choice-btns {
 }
 
 button.choice-btn {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-family: var(--screen-font);
   font-weight: bold;
-  color: var(--dark-gray);
-  text-shadow: 0 0 3px white;
+  color: white;
+  text-shadow: 0 0 3px black;
   text-align: center;
-  width: 100px;
+  width: 90px;
   border: none;
   border-radius: 20px;
   padding: calc(var(--common-padding) * 0.5);
@@ -680,52 +730,33 @@ button.choice-btn:hover {
 
 button.choice-btn#yes {
   border-color: white;
-  background: radial-gradient(circle, #EEE0C9, #85EF47 25%, #00BD56 50%);
+  background: linear-gradient(#3bd882 25%, #00BD56 50%);
 }
 
 button.choice-btn#no {
   border-color: white;
-  background: radial-gradient(circle, #EEE0C9, #EB5353 25%, #e73636 50%);
+  background: linear-gradient(#EB5353 25%, #e73636 50%);
 }
 
 div#action-btns {
   grid-area: action;
   border: 3px inset var(--dark-gray);
-  padding: 5px;
-  border-radius: 5px;
+  padding: 8px;
+  border-radius: 10px;
   height: 100%;
-  width: 90%;
-  justify-self: start;
+  width: 170px;
+  min-width: max-content;
+  justify-self: center;
 
   display: grid;
+  gap: var(--common-padding);
   justify-content: center;
   justify-items: center;
   align-items: start;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: max-content 1fr;
+  grid-template-rows: max-content;
   grid-template-areas:
-    ". ."
     "surrender random";
-}
-
-div.button-lock {
-  width: max-content;
-  height: max-content;
-  filter: opacity(0.3);
-}
-
-div.button-lock svg {
-  width: 15px;
-  height: 15px;
-  filter: drop-shadow(0 0 2px white);
-}
-
-div.button-lock svg path {
-  fill: var(--base-red);
-}
-
-div.button-lock.lock {
-  filter: opacity(1);
 }
 
 button#surrender {
@@ -739,16 +770,17 @@ button#start-btn {
   align-items: center;
   gap: var(--common-padding);
 
-  width: max-content;
+  width: 160px;
   height: max-content;
 
+  margin-top: var(--common-padding);
   padding: var(--common-padding);
   border: 5px outset #FFDEDE;
   border-radius: 5px;
 
   background-color: #FAF0E4;
   
-  font-size: 2rem;
+  font-size: 1.3rem;
   color: var(--dark-gray);  
   text-shadow: 0 0px 8px #9BCDD2;
   transition: filter 0.2s ease-in-out;
@@ -757,6 +789,8 @@ button#start-btn {
 button#start-btn svg {
   fill: var(--dark-gray);
   filter: drop-shadow(0px 0px 8px #9BCDD2);
+  width: calc(var(--cell-size) * 0.8);
+  height: calc(var(--cell-size) * 0.8);
 }
 
 button#start-btn:hover {
@@ -767,45 +801,44 @@ button#start-btn:active{
   transform: scale(0.9);
 }
 
-div#help-buttons {
+button#help{
   grid-area: help;
-  display: grid;
-  grid-template-columns: max-content max-content;
-  gap: 8px;
-  align-self: center;
 }
 
-button#close-help {
+button#close-btn {
   display: flex;
   height: var(--cell-size);
   width: var(--cell-size);
+  border-radius: 50%;
   padding: 0;
-  background-color: #EB5353;
+  background: radial-gradient(#DDE6ED 5%, #FBA834 10%, #EB5353 70%, #e73636);
   border: 4px outset #e73636;
   box-shadow: 0 5px 5px #27374D;
   transition: filter 0.2s ease-in-out;
+  justify-self: end;
+  margin-right: var(--common-margin);
 }
 
-button#close-help svg {
+button#close-btn svg {
   width: 100%;
   height: 100%;
   filter: drop-shadow(0px 0px 3px #FBA834);
 }
 
-button#close-help path {
-  stroke: #f7d9af;
+button#close-btn path {
+  stroke: black;
 }
 
-button#randomize {
+button#random {
   grid-area: random;
 }
 
 button#back-hud {
   grid-area: back-hud;
-  width: calc(var(--cell-size) * 1.3);
-  height: calc(var(--cell-size) * 1.3);
+  width: var(--cell-size);
+  height: var(--cell-size);
   border-radius: 50%;
-  padding: var(--common-padding);
+  padding: 3px;
   justify-self: start;
   margin-left: var(--common-margin);
   border: 4px outset #084397;
@@ -827,14 +860,14 @@ button.hud-btn {
   gap: 5px;
 
   padding: calc(var(--common-padding) * 0.8);
-  border: 5px outset var(--light-blue);
+  border: 4px outset var(--light-blue);
   border-radius: 8px;
   box-shadow: 0 8px 8px #27374D;
 
-  width: 80px;
-  height: 85px;
+  width: 70px;
+  height: 70px;
 
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: var(--light-blue);
   text-shadow: 0 0 8px var(--light-blue);
   background-color: var(--dark-gray);
@@ -847,20 +880,16 @@ button.hud-btn:not(:disabled):hover {
   filter: brightness(1.2);
 }
 
-button.hud-btn svg {
-  width: var(--cell-size);
-  filter: drop-shadow(0px 0px 3px rgba(149, 233, 249, 0.8));
-}
-
 button.hud-btn:not(:disabled):active {
   transform: scale(0.98);
 }
 
 button.hud-btn svg {
-  width: calc(var(--cell-size) * 1.3);
-  height: calc(var(--cell-size) * 1.3);
+  width: calc(var(--cell-size) * 0.8);
+  height: calc(var(--cell-size) * 0.8);
   fill: var(--light-blue);
   transition: filter 0.2s ease-in-out;
+  filter: drop-shadow(0px 0px 3px rgba(149, 233, 249, 0.8));
 }
 
 /* HUD (end) */
