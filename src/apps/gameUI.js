@@ -39,7 +39,7 @@ const gameStart = function () {
   // })
 
   // Open initial content on screen (strategy phase)
-  showStratScreen()
+  showStratScreen();
 
   // Add eventListeners to HUD buttons
   const startBtn = document.querySelector('button#start-btn');

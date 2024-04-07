@@ -83,17 +83,20 @@ const randomizeShipPlacement = function () {
   computerPlaceShips(playerBoard);
   playerShips = memory.getPlayerShips();
 
-  // Clear the ships on the board, then show new placement
+  // Clear the ships on the DOM board, then show new placement
   clearPlayerBoard();
   playerShips.forEach(shipObj => {
     createShipUnit(shipObj,'player');
   });
+}
 
+const removeRandomShipPlacement = function () {
+  const randomBtn = document.querySelector('button#random');
+  randomBtn.removeEventListener('click', randomizeShipPlacement);
 }
 
 
 // Randomize Ship Placement (end)
-
 const slideShowHud = async function () {
   const hudMenu = document.querySelector('div#hud');
   const isHudShown = hudMenu.getAttribute('class').includes('shown');
@@ -139,12 +142,6 @@ const returnToMainDisplay = function () {
   }
 }
 
-
-
-
-
-
-
 const addMenuEvents = function () {
   const menuBtn = document.querySelector('button#menu-btn');
   const menuBackBtn = document.querySelector('button#back-hud');
@@ -163,6 +160,7 @@ export {
   showAttackScreen,
   showSurrenderScreen, 
   randomizeShipPlacement,
+  removeRandomShipPlacement,
   closeContent, 
   returnToMainDisplay,
   addMenuEvents

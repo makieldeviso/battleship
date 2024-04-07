@@ -1,7 +1,7 @@
 import memory from "./memoryHandler";
 import { computerAttackPlayer, generateRandomNumber } from "./computerScript";
 import { removeShipEvents } from "./domShips";
-import { addMenuEvents, slideShowHud, showAttackScreen, showSurrenderScreen } from "./domMenu";
+import { addMenuEvents, slideShowHud, showAttackScreen, showSurrenderScreen, removeRandomShipPlacement } from "./domMenu";
 
 let turnSwitch;
 class TurnSwitcher {
@@ -174,6 +174,7 @@ const startAttack = function () {
 
   // Remove eventListeners to player ship units/ disable moving
   removeShipEvents();
+  removeRandomShipPlacement();
   currentGame.endPlayerStrategy();
 
   // Save new TurnSwitcher object to turnSwitch variable defined with 'let' at upper scope
