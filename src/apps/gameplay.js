@@ -1,4 +1,5 @@
 // Scripts
+import memory from "./memoryHandler";
 import { computerPlaceShips } from "./computerScript";
 import GameBoard from "./gameBoard";
 import Player from "./players";
@@ -7,7 +8,7 @@ class GamePlay {
   constructor() {
     this.playerShipPlaced = false;
     this.phase = 'start';
-    this.computer = new Player('coco');
+    this.computer = new Player('Computer');
     this.player = new Player('Player');
     this.maxShips = 5;
   }
@@ -24,6 +25,8 @@ class GamePlay {
     computerPlaceShips(playerBoard); 
     this.player.gameBoard = playerBoard;
     this.phase = 'playerPlaceShip';
+
+    memory.setCurrentGame(this);
   }
 
   endPlayerStrategy () {

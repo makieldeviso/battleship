@@ -1,5 +1,5 @@
 import memory from "./memoryHandler";
-import { clearPlayerBoard, createShipUnit, showShipPlacement } from "./domShips";
+import { clearPlayerBoard, createShipUnit} from "./domShips";
 import { computerPlaceShips } from "./computerScript";
 
 // Helper function, close current screen to change to new screen
@@ -83,12 +83,10 @@ const randomizeShipPlacement = function () {
   computerPlaceShips(playerBoard);
   playerShips = memory.getPlayerShips();
 
-  const playerGrid = document.querySelector('div#player-grid div.main-grid');
+  // Clear the ships on the board, then show new placement
   clearPlayerBoard();
-
   playerShips.forEach(shipObj => {
     createShipUnit(shipObj,'player');
-    showShipPlacement(shipObj.placement, playerGrid);
   });
 
 }

@@ -1,9 +1,8 @@
 import GamePlay from "./gameplay";
-import memory from "./memoryHandler";
 
 // UI Scripts
 import { createGridInBoard } from "./domGridCreator";
-import { showShipPlacement, createShipTally, createShipUnit } from "./domShips";
+import { createShipTally, createShipUnit} from "./domShips";
 import startAttack from "./domAttack";
 import { showStratScreen, showHelpScreen, returnToMainDisplay, randomizeShipPlacement } from "./domMenu";
 
@@ -14,13 +13,10 @@ const gameStart = function () {
   // create a GamePlay object then execute start method
   const newGame = new GamePlay();
   newGame.start();
-   // Save current game to memory
-   memory.setCurrentGame(newGame);
   
   // Create grid for the DOM using data from newGame
   createGridInBoard(newGame.computer, domComputerBoard);
   createGridInBoard(newGame.player, domPlayerBoard);
-  console.log(newGame);
 
   // Create ship tally board
   const computerShips = newGame.computer.gameBoard.ships;
@@ -31,16 +27,6 @@ const gameStart = function () {
 
   // Initially places ships for the player in random spots
   playerShips.forEach(ship => createShipUnit(ship, 'player'));
-
-  // Adds UI indicator of occupied cells by ship units in the player grid
-  const playerBoard = newGame.player.gameBoard.board;
-  Object.keys(playerBoard).forEach(key => {
-    if (playerBoard[key].occupied) {
-      const {column, row} = playerBoard[key];
-      // Note: showShipPlacement requires array of coordinates as argument
-      showShipPlacement([[column, row]], domPlayerBoard )
-    }
-  })
 
   // !!!!!!!!!! temp execution
   // const computerBoard = newGame.computer.gameBoard.board;

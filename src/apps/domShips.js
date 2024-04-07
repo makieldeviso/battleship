@@ -18,6 +18,15 @@ const showShipPlacement = function (coordinates, domBoard) {
   })
 }
 
+const showPlayerShipPlacement = function () {
+  const playerGrid = document.querySelector('div#player-grid div.main-grid');
+  const playerShips = memory.getPlayerShips();
+  playerShips.forEach(shipObj => {
+    showShipPlacement(shipObj.placement, playerGrid);
+  });
+}
+
+
 // Helper function for createShipTally and createShipUnit
 // Creates shipUnit element with attributes
 const createDomShip = function (shipObj) {
@@ -445,6 +454,7 @@ const createShipUnit = function (shipObj, playerName) {
 
   // Adds eventListeners to shipUnit made
   if (playerName === 'player') {
+    showPlayerShipPlacement();
     shipUnit.addEventListener('mousedown', selectShipUnit);
     shipUnit.addEventListener('dblclick', rotateShipUnit);
     shipUnit.addEventListener('contextmenu', (event) => event.preventDefault());
@@ -473,4 +483,4 @@ const removeShipEvents = function () {
   })
 }
 
-export {showShipPlacement, createShipTally, createShipUnit, removeShipEvents, clearPlayerBoard}
+export {showPlayerShipPlacement, createShipTally, createShipUnit, removeShipEvents, clearPlayerBoard}
