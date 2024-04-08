@@ -1,7 +1,7 @@
 import memory from "./memoryHandler";
 import { computerAttackPlayer, generateRandomNumber } from "./computerScript";
 import { removeShipEvents } from "./domShips";
-import { addMenuEvents, slideShowHud, showAttackScreen, showSurrenderScreen, removeRandomShipPlacement } from "./domMenu";
+import { addMenuEvents, slideShowHud, showAttackScreen, showSurrenderScreen, removeRandomShipPlacement, showGameOverScreen } from "./domMenu";
 
 let turnSwitch;
 class TurnSwitcher {
@@ -33,7 +33,7 @@ class TurnSwitcher {
   }
 
   startGameOverSequence () {
-    console.log(memory.getCurrentGame())
+    showGameOverScreen(this.isGameOver);
     console.log(this.isGameOver);
   }
 
@@ -197,10 +197,6 @@ const startAttack = function () {
 
   // Add eventListener to menu button
   addMenuEvents();
-
-  // Add eventListener to Surrender Button
-  const surrenderBtn = document.querySelector('button#surrender');
-  surrenderBtn.addEventListener('click', showSurrenderScreen);
 
   // Show attack phase screen 
   showAttackScreen();

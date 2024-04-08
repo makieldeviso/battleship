@@ -2,9 +2,9 @@ import GamePlay from "./gameplay";
 
 // UI Scripts
 import { createGridInBoard } from "./domGridCreator";
-import { createShipTally, createShipUnit} from "./domShips";
+import { showShipPlacement, createShipTally, createShipUnit} from "./domShips";
 import startAttack from "./domAttack";
-import { showStratScreen, showHelpScreen, returnToMainDisplay, randomizeShipPlacement } from "./domMenu";
+import { showStratScreen, showHelpScreen, returnToMainDisplay, randomizeShipPlacement, showSurrenderScreen } from "./domMenu";
 
 const domPlayerBoard = document.querySelector('div#player-grid');
 const domComputerBoard = document.querySelector('div#computer-grid');
@@ -13,6 +13,8 @@ const gameStart = function () {
   // create a GamePlay object then execute start method
   const newGame = new GamePlay();
   newGame.start();
+
+  console.log(newGame);
   
   // Create grid for the DOM using data from newGame
   createGridInBoard(newGame.computer, domComputerBoard);
@@ -28,16 +30,11 @@ const gameStart = function () {
   // Initially places ships for the player in random spots
   playerShips.forEach(ship => createShipUnit(ship, 'player'));
 
-  // !!!!!!!!!! temp execution
-  // const computerBoard = newGame.computer.gameBoard.board;
-  // Object.keys(computerBoard).forEach(key => {
-  //   if (computerBoard[key].occupied) {
-  //     const {column, row} = computerBoard[key];
-  //     // Note: showShipPlacement requires array of coordinates as argument
-  //     showShipPlacement([[column, row]], domComputerBoard )
-  //   }
-  // })
-
+  // !!!!!!!!!! temporary execution
+  console.log('computer placement shown');
+  const computerBoard = document.querySelector('div#computer-grid div.main-grid');
+  computerShips.forEach(ship => showShipPlacement(ship.placement, computerBoard))
+  
   // Open initial content on screen (strategy phase)
   showStratScreen();
 
@@ -46,11 +43,13 @@ const gameStart = function () {
   const helpBtn = document.querySelector('button#help');
   const closeBtn = document.querySelector('button#close-btn');
   const randomBtn = document.querySelector('button#random');
+  const surrenderBtn = document.querySelector('button#surrender');
   
   startBtn.addEventListener('click', startAttack);
   helpBtn.addEventListener('click', showHelpScreen);
   closeBtn.addEventListener('click', returnToMainDisplay);
   randomBtn.addEventListener('click', randomizeShipPlacement);
+  surrenderBtn.addEventListener('click', showSurrenderScreen);
 
 }
 

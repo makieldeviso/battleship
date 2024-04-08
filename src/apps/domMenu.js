@@ -1,6 +1,6 @@
 import memory from "./memoryHandler";
 import { clearPlayerBoard, createShipUnit} from "./domShips";
-import { computerPlaceShips } from "./computerScript";
+import { computerPlaceShips, generateRandomNumber } from "./computerScript";
 
 // Helper function, close current screen to change to new screen
 const closeContent = function () {
@@ -54,15 +54,34 @@ const confirmSurrender = function () {
 }
 // Surrender (start)
 const showSurrenderScreen = function () {
-  closeContent();
   const surrenderScreen = document.querySelector('div#surrender');
+  
+  if (!surrenderScreen.getAttribute('class').includes('closed')) return;
+
+  closeContent();
+  const gamePhase = memory.getCurrentGame().phase;
+  
+  const surrenderMessage = surrenderScreen.querySelector('p.message');
+
+  let messageText;
+  if (gamePhase === 'playerPlaceShip') {
+    const noStartQuotes = [
+      'No battles are won without charging!',
+      'Were just chilling here General.'
+    ]
+    const randomIndex = generateRandomNumber(0, noStartQuotes.length - 1);
+    messageText = noStartQuotes[randomIndex];
+  }
+
+  surrenderMessage.textContent = messageText;
+
+  surrenderScreen.classList.remove('closed');
 
   const yesBtn = document.querySelector('button#yes');
   const noBtn = document.querySelector('button#no');
 
   [yesBtn, noBtn].forEach(btn => btn.addEventListener('click', confirmSurrender));
-
-  surrenderScreen.classList.remove('closed');
+  
 }
 
 // Surrender (end)
@@ -95,8 +114,43 @@ const removeRandomShipPlacement = function () {
   randomBtn.removeEventListener('click', randomizeShipPlacement);
 }
 
-
 // Randomize Ship Placement (end)
+
+
+// Game Over (start)
+const showGameOverScreen = function (result) {
+  closeContent();
+
+  const gameOverModal = document.querySelector('dialog#gameover-dialog');
+  const gameOverScreen = document.querySelector('div#game-over');
+  const header = gameOverScreen.querySelector('h3');
+  const resultMsg = gameOverScreen.querySelector('p#result-msg');
+
+  const currentGame = memory.getCurrentGame();
+  const playerName = currentGame.player.name;
+  const computerName = currentGame.computer.name;
+
+  let headerMessage;
+  let message;
+  if (result === `${playerName} Wins`) {
+    headerMessage = 'Victory';
+    message = 'Congratulations Sir! We have destroyed the enemy fleet.';
+
+  } else if (result === `${computerName} Wins`) {
+    headerMessage = 'Loss';
+    message = '...';
+  }
+  
+  header.textContent = headerMessage;
+  resultMsg.textContent = message;
+
+  gameOverModal.showModal();
+
+}
+
+// Game Over (end)
+
+
 const slideShowHud = async function () {
   const hudMenu = document.querySelector('div#hud');
   const isHudShown = hudMenu.getAttribute('class').includes('shown');
@@ -161,6 +215,7 @@ export {
   showSurrenderScreen, 
   randomizeShipPlacement,
   removeRandomShipPlacement,
+  showGameOverScreen,
   closeContent, 
   returnToMainDisplay,
   addMenuEvents

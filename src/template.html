@@ -96,8 +96,7 @@
                 </div>
 
                 <div id="surrender" class="content closed">
-                  <h3>Are you sure you want to surrender?</h3>
-                  <p class="message">1. Click a cell in the enemy grid to attack.</p>
+                  <p class="message">Are you sure you want to surrender?</p>
                 </div>
 
               </div>
@@ -136,9 +135,24 @@
 
       </div>
 
-      <dialog id="gameover-dialog">
-        <p id="gameover-msg"></p>
-        <button type="button" id="play-again">Play Again</button>
+      <dialog id="gameover-dialog" class="loss">
+        <div class="dialog-cont">
+
+          <div id="gameover-screen">
+            <div id="game-over-content">
+              <h3 id="match-result">Victory!</h3>
+              <p id="result-msg">You have destroyed the enemy fleet.</p>
+              <p class="message">Would you like to play again?</p>
+            </div>
+          </div>
+
+          <div id="gameover-choice-btns">
+            <button class="choice-btn" type="button" id="yes" value="yes">Yes</button>
+            <button class="choice-btn" type="button" id="no" value="no">No</button>
+          </div>
+
+        </div>
+
       </dialog>
 
     </main>

@@ -483,4 +483,4 @@ const removeShipEvents = function () {
   })
 }
 
-export {showPlayerShipPlacement, createShipTally, createShipUnit, removeShipEvents, clearPlayerBoard}
+export {showShipPlacement, showPlayerShipPlacement, createShipTally, createShipUnit, removeShipEvents, clearPlayerBoard}

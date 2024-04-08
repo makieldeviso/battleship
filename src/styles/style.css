@@ -894,3 +894,104 @@ button.hud-btn svg {
 
 /* HUD (end) */
 
+/* Game Over (start) */
+dialog#gameover-dialog {
+  width: max-content;
+  height: max-content;
+  margin: 8vh auto;
+  border: 2px outset var(--light-blue);
+  border-radius: 10px;
+  overflow: hidden;
+  background-image: url(../assets/metal.jpg);
+  box-shadow: 0 0 10px 2px var(--base-blue);
+}
+
+dialog#gameover-dialog.loss {
+  box-shadow: 0 0 10px 2px #27374D;
+}
+
+dialog#gameover-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  background-image: url(../assets/victory.gif);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+dialog#gameover-dialog.loss::backdrop {
+  background-image: url(../assets/sink.gif);
+  background-repeat: repeat;
+  background-size: auto;
+  filter: brightness(0.3);
+}
+
+div.dialog-cont {
+  width: 100%;
+  height: max-content;
+  background-color: rgba(82, 109, 130, 0.8);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: calc(var(--common-padding) * 2);
+
+  display: grid;
+  grid-template-columns: max-content;
+  grid-template-rows: 1fr max-content;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  gap: var(--common-margin);
+}
+
+div#gameover-screen {
+  width: 350px;
+  height: 200px;
+  border: 1px solid white;
+  margin: auto;
+
+  overflow: hidden;
+  background: radial-gradient(rgba(50, 68, 93, 0.8) 20%, rgba(39, 55, 77, 0.8) 40%, rgba(0, 0, 0, 0.8));
+  border-radius: 10px;
+  border: 1px solid var(--base-blue);
+  box-shadow: 0 0 10px 4px #27374D;
+}
+
+div#game-over-content {
+  height: 100%;
+  height: 100%;
+  background-image: url(../assets/crt.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: calc(var(--common-padding) * 2) var(--common-padding);
+  box-shadow: inset 0 0 8px 2px rgba(149, 233, 249, 0.6);
+}
+
+div#gameover-screen h3,
+div#gameover-screen p {
+  font-family: var(--screen-font);
+  text-align: center;
+  color: var(--light-blue);
+  text-shadow: 0 0 3px rgba(149, 233, 249, 0.8);
+}
+
+div#gameover-screen h3 {
+  font-size: 1.5rem;
+  margin-bottom: var(--common-margin);
+}
+
+div#gameover-screen p {
+  font-size: 1rem;
+  margin: var(--common-margin);
+}
+
+div#gameover-choice-btns {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: calc(var(--common-margin) * 2);
+  margin-bottom: var(--common-margin);
+}
+
+
+/* Game Over (end) */
+
