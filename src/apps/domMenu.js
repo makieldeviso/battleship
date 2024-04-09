@@ -113,43 +113,7 @@ const removeRandomShipPlacement = function () {
   const randomBtn = document.querySelector('button#random');
   randomBtn.removeEventListener('click', randomizeShipPlacement);
 }
-
 // Randomize Ship Placement (end)
-
-
-// Game Over (start)
-const showGameOverScreen = function (result) {
-  closeContent();
-
-  const gameOverModal = document.querySelector('dialog#gameover-dialog');
-  const gameOverScreen = document.querySelector('div#game-over');
-  const header = gameOverScreen.querySelector('h3');
-  const resultMsg = gameOverScreen.querySelector('p#result-msg');
-
-  const currentGame = memory.getCurrentGame();
-  const playerName = currentGame.player.name;
-  const computerName = currentGame.computer.name;
-
-  let headerMessage;
-  let message;
-  if (result === `${playerName} Wins`) {
-    headerMessage = 'Victory';
-    message = 'Congratulations Sir! We have destroyed the enemy fleet.';
-
-  } else if (result === `${computerName} Wins`) {
-    headerMessage = 'Loss';
-    message = '...';
-  }
-  
-  header.textContent = headerMessage;
-  resultMsg.textContent = message;
-
-  gameOverModal.showModal();
-
-}
-
-// Game Over (end)
-
 
 const slideShowHud = async function () {
   const hudMenu = document.querySelector('div#hud');
@@ -215,7 +179,6 @@ export {
   showSurrenderScreen, 
   randomizeShipPlacement,
   removeRandomShipPlacement,
-  showGameOverScreen,
   closeContent, 
   returnToMainDisplay,
   addMenuEvents

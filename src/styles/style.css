@@ -608,7 +608,7 @@ div#hud-screen div.content {
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   overflow: hidden;
   margin: auto;
 
@@ -644,7 +644,7 @@ div#hud-screen p,
 div#hud-screen h3 {
   font-family: var(--screen-font);
   font-size: 1rem;
-  width: 100%;
+  width: 95%;
 
   margin-left: 1rem;
   text-indent: -1rem;
@@ -653,7 +653,7 @@ div#hud-screen h3 {
   display: inline-block;
   color: var(--light-blue);
   text-shadow: 0 0 3px rgba(149, 233, 249, 0.8);
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 
 div#hud-screen h3 {
@@ -728,12 +728,12 @@ button.choice-btn:hover {
   filter: brightness(1.1);
 }
 
-button.choice-btn#yes {
+button.choice-btn[value="yes"] {
   border-color: white;
   background: linear-gradient(#3bd882 25%, #00BD56 50%);
 }
 
-button.choice-btn#no {
+button.choice-btn[value="no"] {
   border-color: white;
   background: linear-gradient(#EB5353 25%, #e73636 50%);
 }
@@ -907,7 +907,7 @@ dialog#gameover-dialog {
 }
 
 dialog#gameover-dialog.loss {
-  box-shadow: 0 0 10px 2px #27374D;
+  box-shadow: 0 0 10px 2px #EB5353;
 }
 
 dialog#gameover-dialog::backdrop {
@@ -922,7 +922,7 @@ dialog#gameover-dialog.loss::backdrop {
   background-image: url(../assets/sink.gif);
   background-repeat: repeat;
   background-size: auto;
-  filter: brightness(0.3);
+  filter: brightness(0.5)
 }
 
 div.dialog-cont {

@@ -1,7 +1,8 @@
 import memory from "./memoryHandler";
 import { computerAttackPlayer, generateRandomNumber } from "./computerScript";
 import { removeShipEvents } from "./domShips";
-import { addMenuEvents, slideShowHud, showAttackScreen, showSurrenderScreen, removeRandomShipPlacement, showGameOverScreen } from "./domMenu";
+import { addMenuEvents, slideShowHud, showAttackScreen, showSurrenderScreen, removeRandomShipPlacement } from "./domMenu";
+import { showGameOverScreen } from "./domGameOver";
 
 let turnSwitch;
 class TurnSwitcher {

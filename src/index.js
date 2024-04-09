@@ -6,6 +6,3 @@ import { gameStart } from "./apps/gameUI";
 
 
 gameStart();
-
-
-document.querySelector('dialog#gameover-dialog').showModal();

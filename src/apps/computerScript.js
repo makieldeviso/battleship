@@ -62,11 +62,11 @@ const createShipPlacement = function (board, length) {
 const computerPlaceShips = function (gameBoard) {
   // Create Ships
   const ships = [
-    new Ship(5, 'Carrier'), 
+    // new Ship(5, 'Carrier'), 
     // new Ship(4, 'Battleship'), 
     // new Ship(3, 'Destroyer'), 
     // new Ship(3, 'Submarine'), 
-    // new Ship(2, 'Patrol Boat')
+    new Ship(2, 'Patrol Boat')
   ];
 
   // Place ships in the board by calling setPlace method 
@@ -82,16 +82,33 @@ const computerAttackPlayer = function () {
   const currentGame = memory.getCurrentGame();
   const {computer, player} = currentGame;
   const playerBoard = player.gameBoard;
-  const playerCellsArray = Object.keys(playerBoard.board).map(key => playerBoard.board[key]);
-  const unAttackedCells = playerCellsArray.filter(cell => !cell.attacked);
-  const randomIndex = generateRandomNumber(0, unAttackedCells.length - 1);
-  const randomCell = unAttackedCells[randomIndex];
+  // const playerCellsArray = Object.keys(playerBoard.board).map(key => playerBoard.board[key]);
+  // const unAttackedCells = playerCellsArray.filter(cell => !cell.attacked);
+  // const randomIndex = generateRandomNumber(0, unAttackedCells.length - 1);
+  // const randomCell = unAttackedCells[randomIndex];
 
-  const attackCoordinates = [`${randomCell.column}`, randomCell.row];
+  // const attackCoordinates = [`${randomCell.column}`, randomCell.row];
   
+  // const attackDetails = computer.sendAttack(attackCoordinates);
+  // const {attackResult, attackedCell} = attackDetails
+
+
+  // Test attack computer 100% hit
+  console.log('computer tests attack is on');
+  const playerShips = playerBoard.ships;
+  const attackCoordinatesArray = [];
+  playerShips.forEach(ship => {
+    ship.placement.forEach(coordinate => {
+      if (!player.gameBoard.board[`${coordinate[0]},${coordinate[1]}`].attacked) {
+        attackCoordinatesArray.push(coordinate)
+      }
+    });
+  })
+
+  const attackCoordinates = attackCoordinatesArray[0];
   const attackDetails = computer.sendAttack(attackCoordinates);
   const {attackResult, attackedCell} = attackDetails
-
+  
   return {attackCoordinates, attackResult, attackedCell}
 }
 
