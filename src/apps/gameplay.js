@@ -59,6 +59,8 @@ class GamePlay {
       this.phase = gameOver;
     }
 
+    // Log score to memory
+    memory.logScores(gameOver);
     return gameOver;
   }
 

@@ -904,11 +904,44 @@ dialog#gameover-dialog {
   overflow: hidden;
   background-image: url(../assets/metal.jpg);
   box-shadow: 0 0 10px 2px var(--base-blue);
+  animation: showUp 0.3s linear;
 }
 
-dialog#gameover-dialog.loss {
+dialog#gameover-dialog.defeat {
   box-shadow: 0 0 10px 2px #EB5353;
 }
+
+@keyframes showUp {
+  from {
+    transform: translateY(-100vh);
+    filter: opacity(0);
+  }
+
+  to {
+    transform: translateY(0);
+    filter: opacity(1);
+  }
+}
+
+@keyframes expand {
+  from {
+    width: 0;
+    height: 100%;
+    left: 50%;
+  }
+
+  to {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+dialog#gameover-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.2s ease-in-out;
+  animation: expand 0.2s linear;
+}
+
 
 dialog#gameover-dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
@@ -918,7 +951,7 @@ dialog#gameover-dialog::backdrop {
   background-position: center;
 }
 
-dialog#gameover-dialog.loss::backdrop {
+dialog#gameover-dialog.defeat::backdrop {
   background-image: url(../assets/sink.gif);
   background-repeat: repeat;
   background-size: auto;

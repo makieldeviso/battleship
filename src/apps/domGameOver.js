@@ -3,7 +3,10 @@ import { closeContent } from "./domMenu";
 
 // Play again (start)
 const playAgain = function () {
-  console.log(this.value);
+  const choice = this.value;
+  // if (choice === 'yes') {
+  //   memory.
+  // }
 }
 
 
@@ -32,9 +35,9 @@ const showGameOverScreen = function (result) {
       gameOverModal.classList.remove('loss');
   
     } else if (result === `${computerName} Wins`) {
-      headerMessage = 'Loss';
+      headerMessage = 'Defeat';
       message = '...';
-      gameOverModal.classList.add('loss');
+      gameOverModal.classList.add('defeat');
     }
     
     header.textContent = headerMessage;
