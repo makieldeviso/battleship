@@ -47,6 +47,7 @@ const createDomShip = function (shipObj) {
 // Creates ship tally/ score board
 const createShipTally = function (shipObj, playerName) {
   const shipUnit = createDomShip(shipObj);
+  shipUnit.classList.add('tally-ship');
   shipUnit.setAttribute('id', `${playerName}-${shipNameFormat(shipObj)}-tally`);
 
   const tallyCont = document.querySelector(`div#${playerName}-tally`);

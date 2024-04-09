@@ -4,7 +4,7 @@ import GamePlay from "./gameplay";
 import { createGridInBoard } from "./domGridCreator";
 import { showShipPlacement, createShipTally, createShipUnit} from "./domShips";
 import startAttack from "./domAttack";
-import { showStratScreen, showHelpScreen, returnToMainDisplay, randomizeShipPlacement, showSurrenderScreen } from "./domMenu";
+import { showStratScreen, showHelpScreen, returnToMainDisplay, randomizeShipPlacement, showSurrenderScreen, slideShowHud } from "./domMenu";
 
 const domPlayerBoard = document.querySelector('div#player-grid');
 const domComputerBoard = document.querySelector('div#computer-grid');
@@ -36,6 +36,7 @@ const gameStart = function () {
   computerShips.forEach(ship => showShipPlacement(ship.placement, computerBoard))
   
   // Open initial content on screen (strategy phase)
+  slideShowHud();
   showStratScreen();
 
   // Add eventListeners to HUD buttons

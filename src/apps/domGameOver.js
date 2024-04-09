@@ -1,15 +1,55 @@
 import memory from "./memoryHandler";
 import { closeContent } from "./domMenu";
+import { gameStart } from "./gameUI";
 
 // Play again (start)
-const playAgain = function () {
-  const choice = this.value;
-  // if (choice === 'yes') {
-  //   memory.
-  // }
+// Helper function, clears board
+const clearBoard = async function () {
+  // Re-executable for player and computer selector
+  const clearBoardHelper = function (selector) {
+    // Clear tally board
+    const tallyBoard = document.querySelector(`div#${selector}-tally`);
+    const tallyShips = tallyBoard.querySelectorAll('div.tally-ship');
+    tallyShips.forEach(ship => tallyBoard.removeChild(ship));
+
+    // Clear the game board grid
+    const board = document.querySelector(`div#${selector}-grid`);
+    const grid = board.querySelector('div.main-grid');
+    const gridCells = grid.querySelectorAll('div.cell');
+    gridCells.forEach(cell => grid.removeChild(cell));
+
+    // Remove ship units
+    // Note: only player has ship units in the DOM
+    if (selector === 'player') {
+      const playerShipUnits = board.querySelectorAll('div.ship-unit');
+      playerShipUnits.forEach(ship => board.removeChild(ship));
+    }
+  }
+
+  clearBoardHelper('player');
+  clearBoardHelper('computer');
+
+  return true;
 }
 
 
+const playAgain = async function () {
+  const choice = this.value;
+  if (choice === 'yes') {
+    // Clear Board
+    await clearBoard();
+
+    // Create new board
+    gameStart();
+
+    // Close victory modal
+    const gameOverModal = document.querySelector('dialog#gameover-dialog')
+    gameOverModal.close();
+
+  } else if (choice === 'no') {
+    console.log('no');
+  }
+}
 
 // Play again (end)
 
