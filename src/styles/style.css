@@ -682,6 +682,41 @@ div#hud-screen div#attack-screen {
   grid-auto-rows: max-content;
 }
 
+/* div#hud-screen div.content#loading{
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes scan {
+  0% {
+    transform: rotate(0);
+    filter: opacity(1);
+  }
+  25% {
+    transform: rotate(90deg);
+    filter: opacity(0.8);
+  }
+  50% {
+    transform: rotate(180deg);
+    filter: opacity(0.5);
+  }
+  75% {
+    transform: rotate(270deg);
+    filter: opacity(0.8);
+  }
+  100% {
+    transform: rotate(360deg);
+    filter: opacity(1);
+  }
+}
+
+div#loading svg {
+  width: 100px;
+  height: 100px;
+  animation: scan infinite 2s linear;
+  animation: name duration timing-function delay iteration-count direction fill-mode;
+} */
+
 div#strat-screen p,
 div#attack-screen p {
   text-align: center;

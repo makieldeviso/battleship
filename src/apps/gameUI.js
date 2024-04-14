@@ -3,11 +3,42 @@ import GamePlay from "./gameplay";
 // UI Scripts
 import { createGridInBoard } from "./domGridCreator";
 import { showShipPlacement, createShipTally, createShipUnit} from "./domShips";
-import startAttack from "./domAttack";
-import { showStratScreen, showHelpScreen, returnToMainDisplay, randomizeShipPlacement, showSurrenderScreen, slideShowHud } from "./domMenu";
+import { showStratScreen, slideShowHud } from "./domMenu";
+import { addHudBtnEvents } from "./domMenuEvents";
+import { closeGameOverModal } from "./domGameOver";
+import memory from "./memoryHandler";
 
 const domPlayerBoard = document.querySelector('div#player-grid');
 const domComputerBoard = document.querySelector('div#computer-grid');
+
+// Helper function, clears board
+const clearBoard = function () {
+  // Re-executable for player and computer selector
+  const clearBoardHelper = function (selector) {
+    // Clear tally board
+    const tallyBoard = document.querySelector(`div#${selector}-tally`);
+    const tallyShips = tallyBoard.querySelectorAll('div.tally-ship');
+    tallyShips.forEach(ship => tallyBoard.removeChild(ship));
+
+    // Clear the game board grid
+    const board = document.querySelector(`div#${selector}-grid`);
+    const grid = board.querySelector('div.main-grid');
+    const gridCells = grid.querySelectorAll('div.cell');
+    gridCells.forEach(cell => grid.removeChild(cell));
+
+    // Remove ship units
+    // Note: only player has ship units in the DOM
+    if (selector === 'player') {
+      const playerShipUnits = board.querySelectorAll('div.ship-unit');
+      playerShipUnits.forEach(ship => board.removeChild(ship));
+    }
+  }
+
+  clearBoardHelper('player');
+  clearBoardHelper('computer');
+
+  return true;
+}
 
 const gameStart = function () {
   // create a GamePlay object then execute start method
@@ -40,17 +71,26 @@ const gameStart = function () {
   showStratScreen();
 
   // Add eventListeners to HUD buttons
-  const startBtn = document.querySelector('button#start-btn');
-  const helpBtn = document.querySelector('button#help');
-  const closeBtn = document.querySelector('button#close-btn');
-  const randomBtn = document.querySelector('button#random');
-  const surrenderBtn = document.querySelector('button#surrender');
-  
-  startBtn.addEventListener('click', startAttack);
-  helpBtn.addEventListener('click', showHelpScreen);
-  closeBtn.addEventListener('click', returnToMainDisplay);
-  randomBtn.addEventListener('click', randomizeShipPlacement);
-  surrenderBtn.addEventListener('click', showSurrenderScreen);
+  addHudBtnEvents();
+
+  // Add events to game over buttons
+  const yesBtn = document.querySelector('button#gameover-yes');
+  const noBtn = document.querySelector('button#gameover-no');
+  [yesBtn, noBtn].forEach(button => button.addEventListener('click', function () {
+    const choice = this.value;
+
+    if (choice === 'yes') {
+      clearBoard();
+      gameStart();
+      closeGameOverModal();
+
+    } else if (choice === 'no') {
+      console.log(this.value);
+    }
+
+    console.log(memory.scores)
+
+  },{once:true}));
 
 }
 

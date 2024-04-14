@@ -1,6 +1,8 @@
 import memory from "./memoryHandler";
-import { clearPlayerBoard, createShipUnit} from "./domShips";
+import { clearPlayerBoard, createShipUnit, removeShipEvents } from "./domShips";
 import { computerPlaceShips, generateRandomNumber } from "./computerScript";
+import startAttack from "./domAttack";
+import { showGameOverModal } from "./domGameOver";
 
 // Helper function, close current screen to change to new screen
 const closeContent = function () {
@@ -23,7 +25,6 @@ const showHelpScreen = function () {
     helpMessageCont = document.querySelector('div#help-message-2');
   }
 
-  
   helpMessageCont.classList.remove('closed');
 }
 // HELP (end)
@@ -37,22 +38,22 @@ const showStratScreen = function () {
 }
 // STRATEGY PHASE (end)
 
-// ATTACK PHASE (start)
-const showAttackScreen = function () {
-  closeContent();
-  const attackScreen = document.querySelector('div#attack-screen');
-
-  attackScreen.classList.remove('closed');
-}
-// ATTACK PHASE (end)
-
-// Surrender (start)
+// SURRENDER (start)
 const confirmSurrender = function () {
+  const currentGame = memory.getCurrentGame();
+  const isAttackPhase = currentGame.phase !== 'playerPlaceShip';
   const choice = this.value;
-  console.log(choice);
 
+  if (choice === 'yes' && isAttackPhase ) {
+    slideShowHud();
+    showGameOverModal('surrender');
+    memory.logScores(`${currentGame.computer.name} Wins`);
+
+  } else if (choice === 'no') {
+    returnToMainDisplay();
+  }
 }
-// Surrender (start)
+
 const showSurrenderScreen = function () {
   const surrenderScreen = document.querySelector('div#surrender');
   
@@ -71,6 +72,9 @@ const showSurrenderScreen = function () {
     ]
     const randomIndex = generateRandomNumber(0, noStartQuotes.length - 1);
     messageText = noStartQuotes[randomIndex];
+
+  } else if (gamePhase.includes('AttackTurn')) {
+    messageText = 'Are you sure you want to surrender?'
   }
 
   surrenderMessage.textContent = messageText;
@@ -84,7 +88,25 @@ const showSurrenderScreen = function () {
   
 }
 
-// Surrender (end)
+// SURRENDER (end)
+
+const returnToMainDisplay = function () {
+  closeContent();
+  const gamePhase = memory.getCurrentGame().phase;
+  
+  // Remove choice button events
+  const yesBtn = document.querySelector('button#yes');
+  const noBtn = document.querySelector('button#no');
+  [yesBtn, noBtn].forEach(btn => btn.removeEventListener('click', confirmSurrender));
+
+
+  if (gamePhase === 'playerPlaceShip') {
+    showStratScreen();
+
+  } else if (gamePhase === 'playerAttackTurn' || gamePhase === 'computerAttackTurn') {
+    showAttackScreen();
+  }
+}
 
 // Randomize Ship Placement (start)
 const randomizeShipPlacement = function () {
@@ -115,12 +137,22 @@ const removeRandomShipPlacement = function () {
 }
 // Randomize Ship Placement (end)
 
+// ATTACK PHASE (start)
+const showAttackScreen = function () {
+  closeContent();
+  const attackScreen = document.querySelector('div#attack-screen');
+
+  attackScreen.classList.remove('closed');
+}
+
 const slideShowHud = async function () {
   const hudMenu = document.querySelector('div#hud');
   const isHudShown = hudMenu.getAttribute('class').includes('shown');
   const menuBtn = document.querySelector('button#menu-btn');
 
+  returnToMainDisplay();
   if (isHudShown) {
+    console.log('hide')
     // Slide/ hide the HUD
     menuBtn.classList.add('pressed');
     hudMenu.classList.add('slide');
@@ -135,9 +167,11 @@ const slideShowHud = async function () {
 
   } else {
     // show the HUD
+    console.log('show')
+    hudMenu.classList.add('shown');
     menuBtn.classList.remove('pressed')
     hudMenu.classList.remove('hidden');
-    hudMenu.classList.add('shown');
+    
     
     await new Promise ((resolve) => {
       setTimeout(() => {
@@ -145,18 +179,6 @@ const slideShowHud = async function () {
         resolve(true);
       }, 0);
     });
-  }
-}
-
-const returnToMainDisplay = function () {
-  closeContent();
-  const gamePhase = memory.getCurrentGame().phase;
-  
-  if (gamePhase === 'playerPlaceShip') {
-    showStratScreen();
-
-  } else if (gamePhase === 'playerAttackTurn' || gamePhase === 'computerAttackTurn') {
-    showAttackScreen();
   }
 }
 
@@ -168,17 +190,37 @@ const addMenuEvents = function () {
   menuBackBtn.disabled = false;
   menuBtn.addEventListener('click', slideShowHud);
   menuBackBtn.addEventListener('click', slideShowHud);
-  
 }
+
+const startAttackPhase = function () {
+  startAttack();
+
+  // Remove eventListeners to player ship units/ disable moving
+  removeShipEvents();
+  removeRandomShipPlacement();
+
+  // Hide Hud menu on attack phase start
+  slideShowHud();
+
+  // Add eventListener to menu button
+  addMenuEvents();
+
+  // Show attack phase screen 
+  showAttackScreen();
+
+  // Remove eventListener to start button
+  this.removeEventListener('click',  startAttackPhase);
+}
+// ATTACK PHASE (end)
 
 export {
   showHelpScreen, 
   slideShowHud, 
   showStratScreen, 
   showAttackScreen,
-  showSurrenderScreen, 
+  startAttackPhase,
+  showSurrenderScreen,
   randomizeShipPlacement,
-  removeRandomShipPlacement,
   closeContent, 
   returnToMainDisplay,
   addMenuEvents

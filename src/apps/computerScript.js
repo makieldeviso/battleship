@@ -62,10 +62,10 @@ const createShipPlacement = function (board, length) {
 const computerPlaceShips = function (gameBoard) {
   // Create Ships
   const ships = [
-    // new Ship(5, 'Carrier'), 
-    // new Ship(4, 'Battleship'), 
-    // new Ship(3, 'Destroyer'), 
-    // new Ship(3, 'Submarine'), 
+    new Ship(5, 'Carrier'), 
+    new Ship(4, 'Battleship'), 
+    new Ship(3, 'Destroyer'), 
+    new Ship(3, 'Submarine'), 
     new Ship(2, 'Patrol Boat')
   ];
 

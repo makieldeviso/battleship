@@ -1,8 +1,6 @@
 import memory from "./memoryHandler";
 import { computerAttackPlayer, generateRandomNumber } from "./computerScript";
-import { removeShipEvents } from "./domShips";
-import { addMenuEvents, slideShowHud, showAttackScreen, showSurrenderScreen, removeRandomShipPlacement } from "./domMenu";
-import { showGameOverScreen } from "./domGameOver";
+import { showGameOverModal } from "./domGameOver";
 
 let turnSwitch;
 class TurnSwitcher {
@@ -21,7 +19,7 @@ class TurnSwitcher {
 
     if ( isGameOver ) {
       this.isGameOver = isGameOver;
-      this.startGameOverSequence();
+      showGameOverModal(isGameOver);
 
     } else if ( isPlayerAttackTurn ) {
       currentGame.setComputerAttackTurn();
@@ -31,11 +29,6 @@ class TurnSwitcher {
       currentGame.setPlayerAttackTurn();
       this.playerTurnScript();
     }
-  }
-
-  startGameOverSequence () {
-    showGameOverScreen(this.isGameOver);
-    console.log(this.isGameOver);
   }
 
 }
@@ -173,9 +166,6 @@ const computerAttackPlayerPhase = async function () {
 const startAttack = function () {
   const currentGame = memory.getCurrentGame();
 
-  // Remove eventListeners to player ship units/ disable moving
-  removeShipEvents();
-  removeRandomShipPlacement();
   currentGame.endPlayerStrategy();
 
   // Save new TurnSwitcher object to turnSwitch variable defined with 'let' at upper scope
@@ -193,17 +183,6 @@ const startAttack = function () {
     turnSwitch.computerTurnScript();
   }
   
-  // Hide Hud menu on attack phase start
-  slideShowHud();
-
-  // Add eventListener to menu button
-  addMenuEvents();
-
-  // Show attack phase screen 
-  showAttackScreen();
-
-  // Remove eventListener to start button
-  this.removeEventListener('click',  startAttack);
 }
 
 export default startAttack
