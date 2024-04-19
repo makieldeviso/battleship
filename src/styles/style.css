@@ -682,47 +682,20 @@ div#hud-screen div#attack-screen {
   grid-auto-rows: max-content;
 }
 
-/* div#hud-screen div.content#loading{
-  justify-content: center;
-  align-items: center;
-}
-
-@keyframes scan {
-  0% {
-    transform: rotate(0);
-    filter: opacity(1);
-  }
-  25% {
-    transform: rotate(90deg);
-    filter: opacity(0.8);
-  }
-  50% {
-    transform: rotate(180deg);
-    filter: opacity(0.5);
-  }
-  75% {
-    transform: rotate(270deg);
-    filter: opacity(0.8);
-  }
-  100% {
-    transform: rotate(360deg);
-    filter: opacity(1);
-  }
-}
-
-div#loading svg {
-  width: 100px;
-  height: 100px;
-  animation: scan infinite 2s linear;
-  animation: name duration timing-function delay iteration-count direction fill-mode;
-} */
 
 div#strat-screen p,
-div#attack-screen p {
+div#attack-screen p,
+div#surrender p {
   text-align: center;
   text-indent: 0;
   margin: 0;
 }
+
+div#surrender p {
+  margin-top: var(--common-margin);
+  font-size: 1.3rem;
+}
+
 
 div#choice-btns {
   grid-area: choice;
@@ -750,7 +723,7 @@ button.choice-btn {
   padding: calc(var(--common-padding) * 0.5);
   border: 3px outset #526D82;
   box-shadow: 0 8px 8px #27374D;
-  filter: brightness(0.8) sepia(0.3);
+  filter: brightness(0.3) sepia(0.3);
   transition: filter 0.2s ease-in-out;
 }
 
@@ -758,7 +731,11 @@ button.choice-btn:active {
   transform: scale(0.95);
 }
 
-button.choice-btn:hover {
+button.choice-btn.open {
+  filter: brightness(0.8) sepia(0.3);
+}
+
+button.choice-btn.open:hover {
   cursor: pointer;
   filter: brightness(1.1);
 }

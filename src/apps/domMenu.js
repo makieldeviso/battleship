@@ -24,8 +24,12 @@ const showHelpScreen = function () {
   } else if (gamePhase === 'playerAttackTurn' || gamePhase === 'computerAttackTurn') {
     helpMessageCont = document.querySelector('div#help-message-2');
   }
-
+ 
   helpMessageCont.classList.remove('closed');
+
+  // Additional commands
+  // Remove choice button events
+  removeSurrenderEvent();
 }
 // HELP (end)
 
@@ -39,6 +43,7 @@ const showStratScreen = function () {
 // STRATEGY PHASE (end)
 
 // SURRENDER (start)
+// Remove surrender choice event
 const confirmSurrender = function () {
   const currentGame = memory.getCurrentGame();
   const isAttackPhase = currentGame.phase !== 'playerPlaceShip';
@@ -54,6 +59,26 @@ const confirmSurrender = function () {
   }
 }
 
+const removeSurrenderEvent = function () {
+  const yesBtn = document.querySelector('button#yes');
+  const noBtn = document.querySelector('button#no');
+
+  [yesBtn, noBtn].forEach(btn => {
+    btn.removeEventListener('click', confirmSurrender);
+    btn.classList.remove('open');
+  });
+}
+
+const addSurrenderEvent = function () {
+  const yesBtn = document.querySelector('button#yes');
+  const noBtn = document.querySelector('button#no');
+
+  [yesBtn, noBtn].forEach(btn => {
+    btn.addEventListener('click', confirmSurrender);
+    btn.classList.add('open');
+  });
+}
+
 const showSurrenderScreen = function () {
   const surrenderScreen = document.querySelector('div#surrender');
   
@@ -63,7 +88,6 @@ const showSurrenderScreen = function () {
   const gamePhase = memory.getCurrentGame().phase;
   
   const surrenderMessage = surrenderScreen.querySelector('p.message');
-
   let messageText;
   if (gamePhase === 'playerPlaceShip') {
     const noStartQuotes = [
@@ -81,11 +105,7 @@ const showSurrenderScreen = function () {
 
   surrenderScreen.classList.remove('closed');
 
-  const yesBtn = document.querySelector('button#yes');
-  const noBtn = document.querySelector('button#no');
-
-  [yesBtn, noBtn].forEach(btn => btn.addEventListener('click', confirmSurrender));
-  
+  addSurrenderEvent();
 }
 
 // SURRENDER (end)
@@ -95,10 +115,7 @@ const returnToMainDisplay = function () {
   const gamePhase = memory.getCurrentGame().phase;
   
   // Remove choice button events
-  const yesBtn = document.querySelector('button#yes');
-  const noBtn = document.querySelector('button#no');
-  [yesBtn, noBtn].forEach(btn => btn.removeEventListener('click', confirmSurrender));
-
+  removeSurrenderEvent();
 
   if (gamePhase === 'playerPlaceShip') {
     showStratScreen();
@@ -110,6 +127,7 @@ const returnToMainDisplay = function () {
 
 // Randomize Ship Placement (start)
 const randomizeShipPlacement = function () {
+  returnToMainDisplay();
   let playerShips = memory.getPlayerShips();
 
   // Remove current ships on the board
@@ -137,6 +155,10 @@ const removeRandomShipPlacement = function () {
 }
 // Randomize Ship Placement (end)
 
+// Randomize Attack Coordinate (start)
+
+// Randomize Attack Coordinate (end)
+
 // ATTACK PHASE (start)
 const showAttackScreen = function () {
   closeContent();
@@ -152,7 +174,6 @@ const slideShowHud = async function () {
 
   returnToMainDisplay();
   if (isHudShown) {
-    console.log('hide')
     // Slide/ hide the HUD
     menuBtn.classList.add('pressed');
     hudMenu.classList.add('slide');
@@ -167,11 +188,9 @@ const slideShowHud = async function () {
 
   } else {
     // show the HUD
-    console.log('show')
     hudMenu.classList.add('shown');
     menuBtn.classList.remove('pressed')
     hudMenu.classList.remove('hidden');
-    
     
     await new Promise ((resolve) => {
       setTimeout(() => {
@@ -191,6 +210,18 @@ const addMenuEvents = function () {
   menuBtn.addEventListener('click', slideShowHud);
   menuBackBtn.addEventListener('click', slideShowHud);
 }
+
+const disableMenuEvents = function () {
+  const menuBtn = document.querySelector('button#menu-btn');
+  const menuBackBtn = document.querySelector('button#back-hud');
+
+  menuBtn.disabled = true;
+  menuBackBtn.disabled = true;
+  menuBtn.removeEventListener('click', slideShowHud);
+  menuBackBtn.removeEventListener('click', slideShowHud);
+}
+
+
 
 const startAttackPhase = function () {
   startAttack();
@@ -223,5 +254,6 @@ export {
   randomizeShipPlacement,
   closeContent, 
   returnToMainDisplay,
-  addMenuEvents
+  addMenuEvents,
+  disableMenuEvents
 }

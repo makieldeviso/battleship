@@ -3,7 +3,7 @@ import GamePlay from "./gameplay";
 // UI Scripts
 import { createGridInBoard } from "./domGridCreator";
 import { showShipPlacement, createShipTally, createShipUnit} from "./domShips";
-import { showStratScreen, slideShowHud } from "./domMenu";
+import { showStratScreen, slideShowHud, disableMenuEvents } from "./domMenu";
 import { addHudBtnEvents } from "./domMenuEvents";
 import { closeGameOverModal } from "./domGameOver";
 import memory from "./memoryHandler";
@@ -36,6 +36,12 @@ const clearBoard = function () {
 
   clearBoardHelper('player');
   clearBoardHelper('computer');
+
+  // Disable menu button on restart
+  disableMenuEvents();
+
+
+
 
   return true;
 }
