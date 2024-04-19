@@ -723,19 +723,15 @@ button.choice-btn {
   padding: calc(var(--common-padding) * 0.5);
   border: 3px outset #526D82;
   box-shadow: 0 8px 8px #27374D;
-  filter: brightness(0.3) sepia(0.3);
+  filter: brightness(0.8) sepia(0.3);
   transition: filter 0.2s ease-in-out;
 }
 
-button.choice-btn:active {
-  transform: scale(0.95);
+button.choice-btn:disabled {
+  filter: brightness(0.3);
 }
 
-button.choice-btn.open {
-  filter: brightness(0.8) sepia(0.3);
-}
-
-button.choice-btn.open:hover {
+button.choice-btn:not(:disabled):hover {
   cursor: pointer;
   filter: brightness(1.1);
 }
@@ -856,6 +852,11 @@ button#back-hud {
   border: 4px outset #084397;
   background: radial-gradient(#DDE6ED 5%, #95e9f9 10%, #207DFF 70%, #084397);
 }
+
+button#back-hud:disabled {
+  filter: brightness(0.5);
+}
+
 
 button#back-hud svg {
   width: 100%;

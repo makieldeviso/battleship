@@ -65,7 +65,7 @@ const removeSurrenderEvent = function () {
 
   [yesBtn, noBtn].forEach(btn => {
     btn.removeEventListener('click', confirmSurrender);
-    btn.classList.remove('open');
+    btn.disabled = true;
   });
 }
 
@@ -75,7 +75,7 @@ const addSurrenderEvent = function () {
 
   [yesBtn, noBtn].forEach(btn => {
     btn.addEventListener('click', confirmSurrender);
-    btn.classList.add('open');
+    btn.disabled = false;
   });
 }
 
@@ -92,20 +92,20 @@ const showSurrenderScreen = function () {
   if (gamePhase === 'playerPlaceShip') {
     const noStartQuotes = [
       'No battles are won without charging!',
-      'Were just chilling here General.'
+      'Were just chilling here General.',
+      "Don't be afraid, fight!"
     ]
     const randomIndex = generateRandomNumber(0, noStartQuotes.length - 1);
     messageText = noStartQuotes[randomIndex];
 
   } else if (gamePhase.includes('AttackTurn')) {
-    messageText = 'Are you sure you want to surrender?'
+    messageText = 'Are you sure you want to surrender?';
+    addSurrenderEvent();
   }
 
   surrenderMessage.textContent = messageText;
 
   surrenderScreen.classList.remove('closed');
-
-  addSurrenderEvent();
 }
 
 // SURRENDER (end)
