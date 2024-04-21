@@ -2,7 +2,7 @@ import memory from "./memoryHandler";
 import { clearPlayerBoard, createShipUnit, removeShipEvents } from "./domShips";
 import { computerPlaceShips, generateRandomNumber } from "./computerScript";
 import startAttack from "./domAttack";
-import { showGameOverModal } from "./domGameOver";
+import { changeScores, showGameOverModal } from "./domGameOver";
 
 // Helper function, close current screen to change to new screen
 const closeContent = function () {
@@ -52,7 +52,10 @@ const confirmSurrender = function () {
   if (choice === 'yes' && isAttackPhase ) {
     slideShowHud();
     showGameOverModal('surrender');
+    
+    // log score to memory then change UI
     memory.logScores(`${currentGame.computer.name} Wins`);
+    changeScores();
 
   } else if (choice === 'no') {
     returnToMainDisplay();

@@ -49,6 +49,10 @@ class Memory {
       this.scores.computer = 0;    
     }
   }
+
+  getScores () {
+    return this.scores;
+  }
 }
 
 const memory = new Memory();

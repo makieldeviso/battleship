@@ -1,6 +1,6 @@
 import memory from "./memoryHandler";
 import { computerAttackPlayer, generateRandomNumber } from "./computerScript";
-import { showGameOverModal } from "./domGameOver";
+import { showGameOverModal, changeScores } from "./domGameOver";
 
 let turnSwitch;
 class TurnSwitcher {
@@ -16,9 +16,10 @@ class TurnSwitcher {
     const lastTurn = currentGame.phase;
     const isPlayerAttackTurn = lastTurn === 'playerAttackTurn';
     const isComputerAttackTurn = lastTurn === 'computerAttackTurn';
-
+  
     if ( isGameOver ) {
       this.isGameOver = isGameOver;
+      changeScores();
       showGameOverModal(isGameOver);
 
     } else if ( isPlayerAttackTurn ) {

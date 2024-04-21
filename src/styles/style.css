@@ -27,11 +27,16 @@
   --cream: #EEE0C9;
 }
 
+/* Header content (start) */
 header {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: var(--common-margin);
+
   padding: var(--common-padding);
-  margin-bottom: var(--common-margin);
+  /* margin-bottom: var(--common-margin); */
 }
 
 h1#title {
@@ -39,6 +44,21 @@ h1#title {
   font-weight: bold;
   color: white;
 }
+
+div#scores {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--common-margin);
+}
+
+div#scores h2, div#scores span {
+  font-family: var(--title-font);
+  color: var(--light-blue);
+  text-shadow: 0 0 5px black;
+}
+
+/* Header content (end) */
 
 main {
   height: 80vh;

@@ -91,7 +91,7 @@ const gameStart = function () {
       closeGameOverModal();
 
     } else if (choice === 'no') {
-      console.log(this.value);
+      location.reload();
     }
 
     console.log(memory.scores)

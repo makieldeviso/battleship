@@ -39,5 +39,16 @@ const showGameOverModal = function (result) {
     gameOverModal.showModal();
 
   }
+
+  const changeScores = function () {
+
+    const playerScoreDom = document.querySelector('h2#player-score');
+    const computerScoreDom = document.querySelector('h2#computer-score');
+    const scores = memory.getScores();
+
+    playerScoreDom.textContent = scores.player;
+    computerScoreDom.textContent = scores.computer;
+  }
+
   
-  export { showGameOverModal, closeGameOverModal }
+  export { showGameOverModal, closeGameOverModal, changeScores }
