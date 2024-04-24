@@ -45,9 +45,6 @@ const clearBoard = function () {
   // Disable menu button on restart
   disableMenuEvents();
 
-
-
-
   return true;
 }
 

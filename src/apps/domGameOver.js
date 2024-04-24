@@ -25,7 +25,7 @@ const showGameOverModal = function (result) {
     } else if (result === `${computerName} Wins`) {
       headerMessage = 'Defeat';
       message = '...';
-      gameOverModal.classList.add('defeat');
+      gameOverModal.classList.add('defeat');  
 
     } else if (result === 'surrender') {
       headerMessage = 'Surrendered';

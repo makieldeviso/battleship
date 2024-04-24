@@ -82,9 +82,9 @@ const addSurrenderEvent = function () {
   });
 }
 
-const showSurrenderScreen = function () {
+const showSurrenderScreen = async function () {
   const surrenderScreen = document.querySelector('div#surrender');
-  
+
   if (!surrenderScreen.getAttribute('class').includes('closed')) return;
 
   closeContent();
@@ -92,6 +92,7 @@ const showSurrenderScreen = function () {
   
   const surrenderMessage = surrenderScreen.querySelector('p.message');
   let messageText;
+
   if (gamePhase === 'playerPlaceShip') {
     const noStartQuotes = [
       'No battles are won without charging!',
@@ -107,8 +108,18 @@ const showSurrenderScreen = function () {
   }
 
   surrenderMessage.textContent = messageText;
-
   surrenderScreen.classList.remove('closed');
+
+  if (gamePhase === 'playerPlaceShip') {
+    // Note: surrender screen auto close if attack phase has not yet started
+    await new Promise ((resolve) => {
+      setTimeout(() => {
+        // If surrender screen is still open after 1.3s, auto close
+        if (!surrenderScreen.getAttribute('class').includes('closed')) resolve (returnToMainDisplay())
+      }, 1300);
+    });
+  }
+
 }
 
 // SURRENDER (end)
