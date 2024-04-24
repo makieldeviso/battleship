@@ -128,6 +128,29 @@ div.play-detail {
   background:  linear-gradient(transparent 5%, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2) );
 }
 
+div.play-detail.current-turn {
+  background:  linear-gradient(30deg,
+    rgba(193, 248, 207, 0.5),
+    rgba(147, 255, 216, 0.5),
+    rgba(84, 140, 255, 0.5), 
+    rgba(121, 0, 255, 0.5));
+  background-size: 400%;
+  animation: current-turn 5s linear alternate infinite forwards;
+}
+
+@keyframes current-turn {
+  0% {
+    background-position: left;
+  }
+  100% {
+    background-position: right;
+  }
+}
+
+div.play-detail {
+
+}
+
 div.play-detail#player-detail {
   justify-self: end;
   margin: 0 var(--common-padding) 0 0;
@@ -159,6 +182,11 @@ button.option-btn {
   grid-template-columns: 1fr;
   justify-content: center;
   position: relative;
+  transition: filter 0.2s ease-in-out;
+}
+
+button.option-btn:disabled {
+  filter: brightness(0.5);
 }
 
 button.option-btn svg.line {
@@ -287,10 +315,6 @@ div.tally-board div div.ship-cell {
 }
 
 /* Tally board (end)*/
-
-
-
-
 /* Play board (end)*/
 
 /* Main play board grid (start) */
@@ -302,6 +326,11 @@ div.main-grid {
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
     border: 3px solid rgba(149, 233, 249, 0.5);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+div.main-grid.current-turn {
+  box-shadow: 0 0 5px 2px #85EF47;
 }
 
 div.main-grid div.cell {
@@ -682,7 +711,7 @@ div#hud-screen h3 {
   text-indent: 0;
 
   width: 100%;
-  margin: 0 0 var(--common-margin) 0;
+  margin: var(--common-margin) 0;
 }
 
 div#hud-screen div#strat-screen,
@@ -714,6 +743,7 @@ div#surrender p {
 div#surrender p {
   margin-top: var(--common-margin);
   font-size: 1.3rem;
+  width: 100%;
 }
 
 

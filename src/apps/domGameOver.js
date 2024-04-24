@@ -20,7 +20,7 @@ const showGameOverModal = function (result) {
     if (result === `${playerName} Wins`) {
       headerMessage = 'Victory';
       message = 'Congratulations Sir! We have destroyed the enemy fleet.';
-      gameOverModal.classList.remove('loss');
+      gameOverModal.classList.remove('defeat');
   
     } else if (result === `${computerName} Wins`) {
       headerMessage = 'Defeat';

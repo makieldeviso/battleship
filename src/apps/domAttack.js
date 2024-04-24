@@ -16,7 +16,7 @@ class TurnSwitcher {
     const lastTurn = currentGame.phase;
     const isPlayerAttackTurn = lastTurn === 'playerAttackTurn';
     const isComputerAttackTurn = lastTurn === 'computerAttackTurn';
-  
+
     if ( isGameOver ) {
       this.isGameOver = isGameOver;
       changeScores();
@@ -129,6 +129,20 @@ const playerAttack = function () {
   turnSwitch.switch();
 };  
 
+const highlightTurn = function (turner) {
+  const opponent = turner === 'player' ? 'computer' : 'player';
+
+  const turnerDetail = document.querySelector(`div#${turner}-detail`);
+  const opponentDetail = document.querySelector(`div#${opponent}-detail`);
+  
+  const turnerGrid = document.querySelector(`div#${turner}-grid div.main-grid`);
+  const opponentGrid = document.querySelector(`div#${opponent}-grid div.main-grid`);
+
+  [turnerDetail, opponentGrid].forEach(elem => elem.classList.add('current-turn'));
+  [opponentDetail, turnerGrid].forEach(elem => elem.classList.remove('current-turn'));   
+
+}
+
 const playerAttackComputerPhase = function () {
   const computerGridCells = document.querySelectorAll('div#computer-grid div.cell');
   computerGridCells.forEach(cell => {
@@ -137,9 +151,13 @@ const playerAttackComputerPhase = function () {
       cell.classList.add('open');
     }
   });
+
+  highlightTurn('player');
 }
 
 const computerAttackPlayerPhase = async function () {
+  highlightTurn('computer');
+
   // Use computerScripts for computer to send attack to player board
   const attackDetails = computerAttackPlayer();
   const { attackCoordinates, attackResult, attackedCell } = attackDetails;

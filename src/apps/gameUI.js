@@ -26,6 +26,11 @@ const clearBoard = function () {
     const gridCells = grid.querySelectorAll('div.cell');
     gridCells.forEach(cell => grid.removeChild(cell));
 
+    // Clear turn marker
+    const detailBoards = document.querySelector(`div#${selector}-detail`);
+    const mainGrids = document.querySelector(`div#${selector}-grid div.main-grid`);
+    [detailBoards, mainGrids].forEach(elem => elem.classList.remove('current-turn'));
+
     // Remove ship units
     // Note: only player has ship units in the DOM
     if (selector === 'player') {
