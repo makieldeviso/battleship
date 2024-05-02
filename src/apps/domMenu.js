@@ -1,6 +1,6 @@
 import memory from "./memoryHandler";
 import { clearPlayerBoard, createShipUnit, removeShipEvents } from "./domShips";
-import { computerPlaceShips, generateRandomNumber } from "./computerScript";
+import { computerPlaceShips, generateRandomNumber, generateAttackCoordinates } from "./computerScript";
 import startAttack from "./domAttack";
 import { changeScores, showGameOverModal } from "./domGameOver";
 
@@ -9,6 +9,12 @@ const closeContent = function () {
   const openContent = document.querySelector('div.content:not(.closed)');
 
   if (openContent) openContent.classList.add('closed');
+
+  // Additional commands
+  // Remove choice button events
+  removeSurrenderEvent();
+  removeRandomAttackEvent();
+  
 }
 
 // HELP (start)
@@ -26,10 +32,6 @@ const showHelpScreen = function () {
   }
  
   helpMessageCont.classList.remove('closed');
-
-  // Additional commands
-  // Remove choice button events
-  removeSurrenderEvent();
 }
 // HELP (end)
 
@@ -169,18 +171,72 @@ const removeRandomShipPlacement = function () {
 // Randomize Ship Placement (end)
 
 // Randomize Attack Coordinate (start)
+const confirmRandomAttack = async function () {
+  const choice = this.value;
+  const { attackX } = this.dataset;
+  const attackY = Number(this.dataset.attackY);
+  
+  const yesBtn = document.querySelector('button#yes');
+  const noBtn = document.querySelector('button#no');
+
+  // Clear added dataset
+  [yesBtn, noBtn].forEach(btn => {
+    btn.removeAttribute('data-attack-x'); // Camel case changes in html
+    btn.removeAttribute('data-attack-y');
+  })
+
+  if (choice === 'yes') {
+    // Simulate clicking the attacked cell in the DOM
+    const computerMainGrid = document.querySelector('div#computer-grid div.main-grid');
+    const attackedCell = computerMainGrid.querySelector(`div.cell[data-column='${attackX}'][data-row='${attackY}']`);
+
+    await slideShowHud(); // Close HUD first
+    attackedCell.click(); // Attack now
+
+  } else {
+    returnToMainDisplay();
+  }
+  
+}
+
+const removeRandomAttackEvent = function () {
+  const yesBtn = document.querySelector('button#yes');
+  const noBtn = document.querySelector('button#no');
+
+  [yesBtn, noBtn].forEach(btn => {
+    btn.removeEventListener('click', confirmRandomAttack);
+    btn.disabled = true;
+
+    if (btn.dataset.attackX) {
+      btn.removeAttribute('data-attack-x'); 
+      btn.removeAttribute('data-attack-y');
+    }
+  });
+}
+
 const randomAttack = function () {
   closeContent();
 
   // Choose random available coordinate to attack 
+  const attackCoordinates = generateAttackCoordinates('computer');
 
+  // Add UI to screen
   const randomScreen = document.querySelector('div#random-attack');
-
-
-
-
+  const attackText = randomScreen.querySelector('p#random-attack-coordinate');
+  attackText.textContent = `[ ${attackCoordinates[0]}, ${attackCoordinates[1]} ]`;
   randomScreen.classList.remove('closed');
 
+  // Enable choice buttons
+  const yesBtn = document.querySelector('button#yes');
+  const noBtn = document.querySelector('button#no');
+
+  [yesBtn, noBtn].forEach(btn => {
+    btn.addEventListener('click', confirmRandomAttack, {once: true});
+    btn.dataset.attackX = `${attackCoordinates[0]}`;
+    btn.dataset.attackY = `${attackCoordinates[1]}`;
+    btn.disabled = false;
+  });
+ 
 }
 
 const addRandomAttack = function () {
@@ -234,24 +290,17 @@ const slideShowHud = async function () {
 
 const addMenuEvents = function () {
   const menuBtn = document.querySelector('button#menu-btn');
-  const menuBackBtn = document.querySelector('button#back-hud');
 
   menuBtn.disabled = false;
-  menuBackBtn.disabled = false;
   menuBtn.addEventListener('click', slideShowHud);
-  menuBackBtn.addEventListener('click', slideShowHud);
 }
 
 const disableMenuEvents = function () {
   const menuBtn = document.querySelector('button#menu-btn');
-  const menuBackBtn = document.querySelector('button#back-hud');
 
   menuBtn.disabled = true;
-  menuBackBtn.disabled = true;
   menuBtn.removeEventListener('click', slideShowHud);
-  menuBackBtn.removeEventListener('click', slideShowHud);
 }
-
 
 const startAttackPhase = function () {
   startAttack();
@@ -272,8 +321,10 @@ const startAttackPhase = function () {
   // Show attack phase screen 
   showAttackScreen();
 
-  // Remove eventListener to start button
+  // Remove eventListener to start button, then add new EventListener
   this.removeEventListener('click',  startAttackPhase);
+  this.addEventListener('click', slideShowHud);
+
 }
 // ATTACK PHASE (end)
 

@@ -619,7 +619,7 @@ div#hud div#hud-container {
   grid-auto-rows: max-content;
   gap: var(--common-padding);
   grid-template-areas:
-    "back-hud ." 
+    ". close-screen" 
     "screen screen"
     "choice choice"
     "help action"
@@ -715,26 +715,30 @@ div#hud-screen h3 {
 }
 
 div#hud-screen div#strat-screen,
-div#hud-screen div#attack-screen {
+div#hud-screen div#attack-screen,
+div#hud-screen div#random-attack {
   display: grid;
   justify-content: center;
   justify-items: center;
   align-items: center;
   gap: 8px;
-}
-
-div#hud-screen div#strat-screen {
   grid-template-rows: max-content 1fr repeat(2, max-content);
+  grid-template-columns: 1fr;
 }
 
-div#hud-screen div#attack-screen {
-  grid-auto-rows: max-content;
+div#hud-screen div#random-attack {
+  grid-template-rows: repeat(3, max-content);
+  gap: var(--common-margin);
 }
 
+div#hud-screen p#random-attack-coordinate {
+  font-size: 2rem;
+}
 
 div#strat-screen p,
 div#attack-screen p,
-div#surrender p {
+div#surrender p,
+div#random-attack p {
   text-align: center;
   text-indent: 0;
   margin: 0;
@@ -745,7 +749,6 @@ div#surrender p {
   font-size: 1.3rem;
   width: 100%;
 }
-
 
 div#choice-btns {
   grid-area: choice;
@@ -864,6 +867,7 @@ button#help{
 }
 
 button#close-btn {
+  grid-area: close-screen;
   display: flex;
   height: var(--cell-size);
   width: var(--cell-size);
@@ -890,29 +894,6 @@ button#close-btn path {
 button#random {
   grid-area: random;
 }
-
-button#back-hud {
-  grid-area: back-hud;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  border-radius: 50%;
-  padding: 3px;
-  justify-self: start;
-  margin-left: var(--common-margin);
-  border: 4px outset #084397;
-  background: radial-gradient(#DDE6ED 5%, #95e9f9 10%, #207DFF 70%, #084397);
-}
-
-button#back-hud:disabled {
-  filter: brightness(0.5);
-}
-
-
-button#back-hud svg {
-  width: 100%;
-  height: 100%;
-  fill: #084397;
-} 
 
 button.hud-btn {
   display: grid;

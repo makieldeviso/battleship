@@ -62,9 +62,6 @@
 
         <div id="hud" class="hidden"> 
           <div id="hud-container">
-            <button id="back-hud" class="hud-btn" disabled>
-              <svg fill="#000000" version="1.1" baseProfile="tiny" id="Layer_1" xmlns:x="&amp;ns_extend;" xmlns:i="&amp;ns_ai;" xmlns:graph="&amp;ns_graphs;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" viewBox="0 0 42 42" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <polygon fill-rule="evenodd" points="27.066,1 7,21.068 26.568,40.637 31.502,35.704 16.865,21.068 32,5.933 "></polygon> </g></svg>
-            </button>
 
             <button type="button" id="close-btn" class="hud-btn">
               <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 6L18 18M18 6L6 18" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
@@ -83,6 +80,8 @@
                 <div id="attack-screen" class="content closed">
                   <h3>Attack Phase</h3>
                   <p>Destroy the enemy fleet!</p>
+                  <p class="help">Press [ Help ] for more details</p>
+                  <p class="help">Press [ Random ] to scan</p>
                 </div>
 
                 <div id="help-message-1" class="content closed">
@@ -90,7 +89,7 @@
                   <p class="instruct">1. Rearrange ships in the grid by dragging.</p>
                   <p class="instruct">2. Double click ships to rotate its orientation.</p>
                   <p class="instruct">3. Press [ Random ] to shuffle ship placement.</p>
-                  <p class="instruct">4. Press start button to finalize ship placement and start attack phase.</p>
+                  <p class="instruct">4. Press [ Start ] to finalize ship placement and start attack phase.</p>
                 </div>
 
                 <div id="help-message-2" class="content closed">
@@ -108,7 +107,7 @@
                 <div id="random-attack" class="content closed">
                   <h3>Current target coordinates:</h3>
                   <p id="random-attack-coordinate"></p>
-                  <p>Press [Start] to launch attack</p>
+                  <p id="random-message">Would you like to attack this location?</p>
                 </div>
 
               </div>

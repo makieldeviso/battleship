@@ -78,12 +78,12 @@ const computerPlaceShips = function (gameBoard) {
   })
 }
 
-const generateAttackCoordinates = function (boardOwner) {
-  // Note: boardOwner parameter is string that corresponds whether 'player' or 'computer'
+const generateAttackCoordinates = function (target) {
+  // Note: target parameter is a string that corresponds whether 'player' or 'computer'
   const currentGame = memory.getCurrentGame();
   const {computer, player} = currentGame;
 
-  const playBoard = boardOwner === 'player' ? player.gameBoard : computer.gameBoard;
+  const playBoard = target === 'player' ? player.gameBoard : computer.gameBoard;
 
   const cellsArray = Object.keys(playBoard.board).map(key => playBoard.board[key]);
   const unAttackedCells = cellsArray.filter(cell => !cell.attacked);
