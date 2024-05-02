@@ -115,13 +115,12 @@ const showSurrenderScreen = async function () {
     await new Promise ((resolve) => {
       setTimeout(() => {
         // If surrender screen is still open after 1.3s, auto close
-        if (!surrenderScreen.getAttribute('class').includes('closed')) resolve (returnToMainDisplay())
+        if (!surrenderScreen.getAttribute('class').includes('closed')) resolve (returnToMainDisplay());
       }, 1300);
     });
   }
 
 }
-
 // SURRENDER (end)
 
 const returnToMainDisplay = function () {
@@ -170,6 +169,24 @@ const removeRandomShipPlacement = function () {
 // Randomize Ship Placement (end)
 
 // Randomize Attack Coordinate (start)
+const randomAttack = function () {
+  closeContent();
+
+  // Choose random available coordinate to attack 
+
+  const randomScreen = document.querySelector('div#random-attack');
+
+
+
+
+  randomScreen.classList.remove('closed');
+
+}
+
+const addRandomAttack = function () {
+  const randomBtn = document.querySelector('button#random');
+  randomBtn.addEventListener('click', randomAttack);
+}
 
 // Randomize Attack Coordinate (end)
 
@@ -236,7 +253,6 @@ const disableMenuEvents = function () {
 }
 
 
-
 const startAttackPhase = function () {
   startAttack();
 
@@ -244,6 +260,9 @@ const startAttackPhase = function () {
   removeShipEvents();
   removeRandomShipPlacement();
 
+  // Add new event to random button (attack coordinate randomizer);
+  addRandomAttack();
+  
   // Hide Hud menu on attack phase start
   slideShowHud();
 

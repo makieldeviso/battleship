@@ -78,16 +78,27 @@ const computerPlaceShips = function (gameBoard) {
   })
 }
 
-const computerAttackPlayer = function () {
+const generateAttackCoordinates = function (boardOwner) {
+  // Note: boardOwner parameter is string that corresponds whether 'player' or 'computer'
   const currentGame = memory.getCurrentGame();
   const {computer, player} = currentGame;
-  const playerBoard = player.gameBoard;
-  const playerCellsArray = Object.keys(playerBoard.board).map(key => playerBoard.board[key]);
-  const unAttackedCells = playerCellsArray.filter(cell => !cell.attacked);
+
+  const playBoard = boardOwner === 'player' ? player.gameBoard : computer.gameBoard;
+
+  const cellsArray = Object.keys(playBoard.board).map(key => playBoard.board[key]);
+  const unAttackedCells = cellsArray.filter(cell => !cell.attacked);
   const randomIndex = generateRandomNumber(0, unAttackedCells.length - 1);
   const randomCell = unAttackedCells[randomIndex];
 
   const attackCoordinates = [`${randomCell.column}`, randomCell.row];
+
+  return attackCoordinates;
+}
+
+const computerAttackPlayer = function () {
+  const currentGame = memory.getCurrentGame();
+  const {computer} = currentGame;
+  const attackCoordinates = generateAttackCoordinates('player');
   
   const attackDetails = computer.sendAttack(attackCoordinates);
   const {attackResult, attackedCell} = attackDetails
@@ -111,4 +122,4 @@ const computerAttackPlayer = function () {
 }
 
 
-export {computerPlaceShips, generateRandomNumber, computerAttackPlayer}
+export {computerPlaceShips, generateRandomNumber, generateAttackCoordinates, computerAttackPlayer}
