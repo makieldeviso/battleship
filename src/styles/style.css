@@ -65,9 +65,9 @@ footer {
   display: flex;
   justify-content: center;
   align-items: end;
-  position: absolute;
-  bottom: 16px;
   width: 100%;
+  margin-top: var(--common-margin);
+  min-width: 768px;
 }
 
 div#footer-cont {
