@@ -2,6 +2,10 @@ import memory from "./memoryHandler";
 import { computerAttackPlayer, generateRandomNumber } from "./computerScript";
 import { showGameOverModal, changeScores } from "./domGameOver";
 
+// Image import
+import hitGif from "../assets/hit.gif";
+import missedGif from "../assets/missed.gif";
+
 let turnSwitch;
 class TurnSwitcher {
   constructor (playerTurnScript, computerTurnScript) {
@@ -49,7 +53,7 @@ const checkShipUnitSank = function (shipObj) {
 
 const animateAttack = async function (domCell, domBoard, attackResult) {
   const explosion = new Image();
-  explosion.src = `../assets/${attackResult}.gif`;
+  explosion.src = attackResult === 'hit' ? hitGif : missedGif
   explosion.setAttribute('id', 'explosion');
   
   // Note: styling at CSS file. This script position the image at absolute offset
