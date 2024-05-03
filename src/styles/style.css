@@ -215,21 +215,24 @@ div.play-detail#player-detail {
   justify-self: end;
   margin: 0 var(--common-padding) 0 0;
   grid-template-areas: 
-  "name menu"
-  "tally menu";
+  "menu name"
+  "menu tally";
 }
 
 div.play-detail#computer-detail {
   justify-self: start;
   margin: 0 0 0 var(--common-padding); 
+  grid-template-columns: 1fr;
   grid-template-areas: 
-  "menu name"
-  "menu tally";
+  "name"
+  "tally";
+  width: 317px;
+  justify-items: center;
 }
 
 button.option-btn {
   grid-area: menu;
-  width: max-content;
+  width: 35px;
   height: 60px;
   justify-self: center;
   padding: 2px;
