@@ -15,4 +15,4 @@ const addHudBtnEvents = function () {
 	surrenderBtn.addEventListener('click', showSurrenderScreen);
 }
 
- export { addHudBtnEvents }
+ export default addHudBtnEvents

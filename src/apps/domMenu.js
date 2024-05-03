@@ -14,7 +14,6 @@ const closeContent = function () {
   // Remove choice button events
   removeSurrenderEvent();
   removeRandomAttackEvent();
-  
 }
 
 // HELP (start)

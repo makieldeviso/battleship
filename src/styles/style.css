@@ -34,6 +34,7 @@ header {
   justify-content: center;
   align-items: center;
   gap: var(--common-margin);
+  min-width: 768px;
 
   padding: var(--common-padding);
   /* margin-bottom: var(--common-margin); */
@@ -92,7 +93,7 @@ div#game-table {
   height: 100%;
   margin: auto;
   gap: 10vw;
-  padding: calc(var(--common-padding) * 2) 0;
+  padding: calc(var(--common-padding) * 2);
   
   display: grid;
   justify-content: center;
@@ -326,7 +327,7 @@ div.main-grid {
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
     border: 3px solid rgba(149, 233, 249, 0.5);
-    transition: box-shadow 0.3s ease-in-out;
+    transition: box-shadow 0.2s ease-in-out;
 }
 
 div.main-grid.current-turn {

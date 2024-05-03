@@ -124,7 +124,7 @@ const selectShipUnit = function (event) {
     
     // Add event listeners
     shipUnit.addEventListener('mousemove', moveShipUnit);
-    shipUnit.addEventListener('mouseup', placeShipUnit);  
+    shipUnit.addEventListener('mouseup', placeShipUnit);   
   } 
 }
 
@@ -250,6 +250,26 @@ const moveShipUnit = function (event) {
 
   // Removes double clicking while moving
   shipUnit.removeEventListener('dblclick', rotateShipUnit);
+
+  // Cancel movement when current event is out of bound of gameBoard
+  const playerGrid = document.querySelector('div#player-grid div.main-grid');
+  const {top, right, bottom, left} = playerGrid.getBoundingClientRect();
+  
+  if (
+    event.clientX < left - 40 || 
+    event.clientX > right + 40 ||
+    event.clientY > bottom + 40||
+    event.clientY < top - 40
+  ) {
+    const mouseUp = new MouseEvent('mouseup', 
+    {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    shipUnit.dispatchEvent(mouseUp);
+  }
+
 }
 
 // Eventlistener function -> mouseup

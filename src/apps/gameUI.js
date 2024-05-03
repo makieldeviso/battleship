@@ -2,11 +2,10 @@ import GamePlay from "./gameplay";
 
 // UI Scripts
 import { createGridInBoard } from "./domGridCreator";
-import { showShipPlacement, createShipTally, createShipUnit} from "./domShips";
+import { createShipTally, createShipUnit} from "./domShips";
 import { showStratScreen, slideShowHud, disableMenuEvents } from "./domMenu";
-import { addHudBtnEvents } from "./domMenuEvents";
+import addHudBtnEvents from "./domMenuEvents";
 import { closeGameOverModal } from "./domGameOver";
-import memory from "./memoryHandler";
 
 const domPlayerBoard = document.querySelector('div#player-grid');
 const domComputerBoard = document.querySelector('div#computer-grid');
@@ -52,8 +51,6 @@ const gameStart = function () {
   // create a GamePlay object then execute start method
   const newGame = new GamePlay();
   newGame.start();
-
-  console.log(newGame);
   
   // Create grid for the DOM using data from newGame
   createGridInBoard(newGame.computer, domComputerBoard);
@@ -69,10 +66,10 @@ const gameStart = function () {
   // Initially places ships for the player in random spots
   playerShips.forEach(ship => createShipUnit(ship, 'player'));
 
-  // !!!!!!!!!! temporary execution
-  console.log('computer placement shown');
-  const computerBoard = document.querySelector('div#computer-grid div.main-grid');
-  computerShips.forEach(ship => showShipPlacement(ship.placement, computerBoard))
+  // Test script (show enemy position)
+  // console.log('computer placement shown');
+  // const computerBoard = document.querySelector('div#computer-grid div.main-grid');
+  // computerShips.forEach(ship => showShipPlacement(ship.placement, computerBoard))
   
   // Open initial content on screen (strategy phase)
   slideShowHud();
@@ -96,10 +93,8 @@ const gameStart = function () {
       location.reload();
     }
 
-    console.log(memory.scores)
-
   },{once:true}));
 
 }
 
-export { gameStart }
+export default gameStart
