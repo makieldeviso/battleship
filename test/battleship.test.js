@@ -205,11 +205,11 @@ describe ('Attack tests', () => {
     submarine.setPlace(newBoard,[['I', 3],['I', 4], ['I', 5]]);
     patrol.setPlace(newBoard,[['E', 9],['F', 9]]);
   
-    expect(newBoard.receiveAttack(['H',7])).toMatch('missed');
+    expect(newBoard.receiveAttack(['H',7]).attackResult).toMatch('missed');
   
-    expect(newBoard.receiveAttack(['I',5])).toMatch('hit');
-    expect(newBoard.receiveAttack(['I',4])).toMatch('hit');
-    expect(newBoard.receiveAttack(['I',3])).toMatch('hit');
+    expect(newBoard.receiveAttack(['I',5]).attackResult).toMatch('hit');
+    expect(newBoard.receiveAttack(['I',4]).attackResult).toMatch('hit');
+    expect(newBoard.receiveAttack(['I',3]).attackResult).toMatch('hit');
     expect(submarine.hitPoints).toBe(3);
     expect(submarine.sunk).toBe(true);
   })
