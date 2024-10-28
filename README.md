@@ -1,2 +1,6 @@
-# battleship
-A battleship game that runs on the browser. Implements TDD with jest
+# Battleship
+
+## About
+Play battleship on the browser. Match against a computer in an interactive game board.
+
+## Objectives

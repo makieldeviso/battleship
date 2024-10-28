@@ -52,7 +52,7 @@ const createBoard = () => {
         // Assign created array of adjacent cells to the cell
         newBoard[key].adjacent = adjArray;
     })
-
+    console.log(newBoard)
     return newBoard
 }
 
