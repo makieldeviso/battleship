@@ -27,6 +27,15 @@
   --cream: #EEE0C9;
 }
 
+body {
+  height: 100vh;
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-rows: max-content 1fr max-content;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Header content (start) */
 header {
   display: flex;
@@ -66,7 +75,7 @@ footer {
   justify-content: center;
   align-items: end;
   width: 100%;
-  margin-top: var(--common-margin);
+  margin: var(--common-margin) 0;
   min-width: 768px;
 }
 
